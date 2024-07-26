@@ -6,9 +6,6 @@ categories: ["[노마드코더] IT 5분 잡학사전"]
 tags: ["노개북", "노마드코더", "개발자북클럽"]
 math: true
 mermaid: true
-image:
-  path: 
-  alt: 
 ---
 ![IT 5분 잡학사전 책 이미지](../assets/img/post/NormadCoder-ItBook-1.png)
 
