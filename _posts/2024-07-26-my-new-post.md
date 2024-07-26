@@ -7,8 +7,8 @@ tags: ["노개북", "노마드코더", "개발자북클럽"]
 math: true
 mermaid: true
 image:
-  path: ../assets/img/post/boog.jpg
-  alt: Book
+  path: ../assets/img/post/devices-mockup.png
+  alt: Responsive rendering of Chirpy theme on multiple devices.
 ---
 ![IT 5분 잡학사전 책 이미지](../assets/img/post/NormadCoder-ItBook-1.png)
 IT잡학사전 Day1 책 구매 인증합니다!:>
