@@ -12,7 +12,7 @@
     </a>
 
     <h1 class="site-title">
-      <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <a href="{{ '../assets/img/favicons/profile.jpg' | relative_url }}">{{ site.title }}</a>
     </h1>
     <p class="site-subtitle fst-italic mb-0">{{ site.tagline }}</p>
   </header>
@@ -22,7 +22,7 @@
     <ul class="nav">
       <!-- home -->
       <li class="nav-item{% if page.layout == 'home' %}{{ " active" }}{% endif %}">
-        <a href="{{ '/' | relative_url }}" class="nav-link">
+        <a href="{{ '../assets/img/favicons/profile.jpg' | relative_url }}" class="nav-link">
           <i class="fa-fw fas fa-home"></i>
           <span>{{ site.data.locales[include.lang].tabs.home | upcase }}</span>
         </a>
