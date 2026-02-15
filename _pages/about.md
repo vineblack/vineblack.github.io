@@ -33,6 +33,6 @@ latest_posts:
 예술공학적 접근을 통해 최적화된 가상 환경을 구축하고, 그 속에 깊은 몰입감을 선사하는 내러티브 디자인을 결합하는 데 열정을 가지고 있습니다. 기술과 예술, 그리고 서사가 만나는 지점에서 새로운 가치를 만들어가는 과정을 즐깁니다.
 
 🛠️ Focus Area
-**3D Environment Art:** 세계관의 개연성을 뒷받침하는 정교한 공간 제작.
-**Narrative Design:** 환경(Environment) 그 자체가 이야기가 되는 연출.
-**Creative World Building:** 독창적인 설정과 논리적인 세계관 구축.
+* **3D Environment Art:** 세계관의 개연성을 뒷받침하는 정교한 공간 제작.
+* **Narrative Design:** 환경(Environment) 그 자체가 이야기가 되는 연출.
+* **Creative World Building:** 독창적인 설정과 논리적인 세계관 구축.
