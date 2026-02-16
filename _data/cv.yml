@@ -1,40 +1,36 @@
 cv:
-  name: Albert Einstein
-  label: Scientist
-  email: einstein@example.com
-  location: Princeton, NJ
+  name: Youngeun Lee
+  label: Narrative 3D Environment Artist
+  email: llstella674@gmail.com
+  location: Seoul, South Korea
   image: ""
-  summary: A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time
+  summary: Designing plausible futures rooted in the dust of reality
 
   social_networks:
     - network: X
-      username: AlbertEinstein
+      username: example
     - network: GitHub
       username: example
     - network: LinkedIn
       username: example
 
   address:
-    street: 2712 Broadway St
-    city: San Francisco
-    region: California
-    postalCode: CA 94115
-    countryCode: US
+    street: 
+    city: Seoul
+    region: 
+    postalCode: 
+    countryCode: KR
 
   sections:
     Education:
-      - institution: University of Zurich
-        location: Zurich, Switzerland
-        url: https://www.uzh.ch/
-        area: Physics
-        studyType: PhD
-        start_date: 1900
-        end_date: 1905
+      - institution: University of Chung-Ang
+        location: Anseong, South Korea
+        url: https://www.cau.ac.kr
+        area: Art & Technology, Double Major in Creative Writing
+        studyType: Bachelor's Degree
+        start_date: 2022.3
+        end_date: 2028.2
         score: ""
-        courses: "Theory of Relativity"
-        highlights:
-          - Description 1.
-          - Description 2.
 
       - institution: Eidgenössische Technische Hochschule
         location: Zurich, Switzerland
