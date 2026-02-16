@@ -507,46 +507,39 @@ ninja.data = [{
           section: "Teachings",handler: () => {
               window.location.href = "/teachings/introduction-to-machine-learning/";
             },},{
-        id: 'social-cv',
-        title: 'CV',
-        section: 'Socials',
-        handler: () => {
-          window.open("/assets/pdf/example_pdf.pdf", "_blank");
-        },
-      },{
         id: 'social-email',
         title: 'email',
         section: 'Socials',
         handler: () => {
-          window.open("mailto:%6C%6C%73%74%65%6C%6C%61%36%37%34@%67%6D%61%69%6C.%63%6F%6D", "_blank");
+          window.open("mailto:{"%6C%6F%67%6F"=>"%68%74%74%70%73://%69%6D%67.%69%63%6F%6E%73%38.%63%6F%6D/%6D%61%74%65%72%69%61%6C-%72%6F%75%6E%64%65%64/%32%34/%6E%65%77-%70%6F%73%74.%70%6E%67", "%74%69%74%6C%65"=>"%65%6D%61%69%6C", "%75%72%6C"=>"%6C%6C%73%74%65%6C%6C%61%36%37%34@%67%6D%61%69%6C.%63%6F%6D"}", "_blank");
         },
       },{
-        id: 'social-inspire',
-        title: 'Inspire HEP',
+        id: 'social-linkedin',
+        title: 'Linkedin',
         section: 'Socials',
         handler: () => {
-          window.open("https://inspirehep.net/authors/1010907", "_blank");
+          window.open("", "_blank");
         },
       },{
-        id: 'social-rss',
-        title: 'RSS Feed',
+        id: 'social-Artstation',
+        title: 'Artstation',
         section: 'Socials',
         handler: () => {
-          window.open("/feed.xml", "_blank");
+          window.open("", "_blank");
         },
       },{
-        id: 'social-scholar',
-        title: 'Google Scholar',
+        id: 'social-github',
+        title: 'Github',
         section: 'Socials',
         handler: () => {
-          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
+          window.open("https://github.com/bigeco", "_blank");
         },
       },{
-        id: 'social-custom_social',
-        title: 'Custom_social',
+        id: 'social-youtube',
+        title: 'Youtube',
         section: 'Socials',
         handler: () => {
-          window.open("https://www.alberteinstein.com/", "_blank");
+          window.open("", "_blank");
         },
       },{
       id: 'light-theme',
