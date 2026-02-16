@@ -39,6 +39,6 @@ The inspiration that came from researching these scenes of [연구/조사했던 
 Solo exhibitions of her artwork have been presented at [전시 장소/박물관1], [전시 장소 2], and other venues. She is a popular lecturer at [강연 대상: 예, art schools or tech conferences], and she teaches [강연/워크숍 주제]. Her [저서 혹은 주요 기록물 제목] was [달성한 기록/성과: 예, 아마존, 베스트셀러1위, 분야, 지속 기간] and is based on her daily [운영 중인 기록 매체: 예, GitHub blog or Devlog].
 
 ### 🛠️ Focus Area
-| **3D Environment Art** | 세계관의 개연성을 뒷받침하는 정교한 공간 제작 |
-| **Narrative Design** | 환경(Environment) 그 자체가 이야기가 되는 연출 |
-| **Creative World Building** | 독창적인 설정과 논리적인 세계관 구축 |
+* | **3D Environment Art** | 세계관의 개연성을 뒷받침하는 정교한 공간 제작 |
+* | **Narrative Design** | 환경(Environment) 그 자체가 이야기가 되는 연출 |
+* | **Creative World Building** | 독창적인 설정과 논리적인 세계관 구축 |
