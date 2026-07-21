@@ -1,0 +1,814 @@
+---
+layout: page
+title: todo
+permalink: /todo/
+nav: true
+nav_order: 6
+description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
+---
+
+<!-- =========================================================================
+  todo / roadmap page  (al-folio 호환, todomate 스타일) — 공유 + 관리자 전용 수정
+  - 모든 방문자는 레포의 assets/data/todos.json 을 읽어 동일하게 봅니다(읽기 전용).
+  - 관리자(나)는 "관리자 모드"에서 fine-grained 토큰을 한 번 넣으면 클릭으로 편집하고
+    "저장"을 누르면 GitHub API 로 그 JSON 에 커밋됩니다. 토큰은 이 브라우저에만 저장됩니다.
+  - 아래 GH 설정(owner/repo/path/branch)과 DEFAULT_CATEGORIES 를 필요시 수정하세요.
+========================================================================== -->
+
+<div id="tm-app"
+     data-storage-key="bigeco-todo-v1"
+     data-data-url="{{ '/assets/data/todos.json' | relative_url }}">
+  <!-- 상단: 월 네비게이션 + 요약 -->
+  <div class="tm-topbar">
+    <div class="tm-month-nav">
+      <button class="tm-iconbtn" data-act="prev" aria-label="이전 달">‹</button>
+      <button class="tm-month-label" data-act="today" title="오늘로 이동"><span id="tm-month-text">—</span></button>
+      <button class="tm-iconbtn" data-act="next" aria-label="다음 달">›</button>
+    </div>
+    <div class="tm-summary" id="tm-summary"></div>
+  </div>
+
+  <div class="tm-grid">
+    <!-- 왼쪽: 캘린더 -->
+    <section class="tm-calendar" aria-label="달력">
+      <div class="tm-weekdays">
+        <span>월</span><span>화</span><span>수</span><span>목</span><span>금</span>
+        <span class="tm-sat">토</span><span class="tm-sun">일</span>
+      </div>
+      <div class="tm-days" id="tm-days"></div>
+    </section>
+
+    <!-- 오른쪽: 선택한 날짜의 할 일 -->
+    <section class="tm-panel" aria-label="할 일 목록">
+      <div class="tm-panel-head">
+        <h3 id="tm-selected-date">날짜를 선택하세요</h3>
+      </div>
+      <div id="tm-lists"></div>
+    </section>
+  </div>
+
+  <!-- 하단: 도구 -->
+  <div class="tm-tools">
+    <button class="tm-toolbtn tm-edit-only" data-act="add-category">+ 카테고리</button>
+    <button class="tm-toolbtn" data-act="stats">통계</button>
+    <span class="tm-tools-spacer"></span>
+    <span class="tm-status" id="tm-status"></span>
+    <button class="tm-toolbtn tm-save tm-edit-only" data-act="save" disabled>저장</button>
+    <button class="tm-toolbtn" id="tm-admin-btn" data-act="admin">관리자 모드</button>
+  </div>
+
+  <!-- 통계 모달 -->
+  <div class="tm-modal" id="tm-stats" hidden>
+    <div class="tm-modal-backdrop" data-act="close-stats"></div>
+    <div class="tm-modal-card" role="dialog" aria-modal="true" aria-label="카테고리별 통계">
+      <div class="tm-modal-head">
+        <h3>통계</h3>
+        <div class="tm-seg">
+          <button class="tm-seg-btn" data-range="month">이번 달</button>
+          <button class="tm-seg-btn tm-active" data-range="all">전체</button>
+        </div>
+        <button class="tm-modal-close" data-act="close-stats" aria-label="닫기">✕</button>
+      </div>
+      <div id="tm-stats-body"></div>
+    </div>
+  </div>
+
+  <!-- 관리자(토큰) 모달 -->
+  <div class="tm-modal" id="tm-token" hidden>
+    <div class="tm-modal-backdrop" data-act="close-token"></div>
+    <div class="tm-modal-card" role="dialog" aria-modal="true" aria-label="관리자 모드">
+      <div class="tm-modal-head">
+        <h3>관리자 모드</h3>
+        <button class="tm-modal-close" data-act="close-token" aria-label="닫기">✕</button>
+      </div>
+      <p class="tm-token-desc">
+        이 레포의 <b>Contents 읽기 및 쓰기</b> 권한을 가진 fine-grained 토큰을 입력하세요.
+        토큰은 <b>이 브라우저에만</b> 저장되고 레포에는 절대 올라가지 않아요.
+      </p>
+      <input type="password" id="tm-token-input" class="tm-token-input" placeholder="github_pat_..." autocomplete="off" spellcheck="false">
+      <div class="tm-token-actions">
+        <a class="tm-token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">토큰 발급하기 ↗</a>
+        <button class="tm-toolbtn tm-save" data-act="save-token">확인</button>
+      </div>
+      <p class="tm-token-err" id="tm-token-err" hidden></p>
+    </div>
+  </div>
+
+  <div class="tm-toast" id="tm-toast" hidden></div>
+</div>
+
+<style>
+/* ── 스코프: 모두 #tm-app 하위, al-folio 클래스와 충돌 없도록 tm- 접두사 ── */
+#tm-app{
+  --tm-accent: var(--global-theme-color, #2698ba);
+  --tm-done:   #34b888;          /* 통계용 완료 초록 */
+  --tm-card:   var(--global-card-bg-color, #1c1c1d);
+  --tm-bg:     var(--global-bg-color, #111);
+  --tm-text:   var(--global-text-color, #e8e8e8);
+  --tm-muted:  var(--global-text-color-light, #888);
+  --tm-line:   var(--global-divider-color, #2a2a2a);
+  --tm-radius: 14px;
+  margin-top: 1.2rem;
+  color: var(--tm-text);
+}
+#tm-app *{ box-sizing: border-box; }
+#tm-app button{ font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+/* 상단바 */
+#tm-app .tm-topbar{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.6rem; margin-bottom:1rem; }
+#tm-app .tm-month-nav{ display:flex; align-items:center; gap:.4rem; }
+#tm-app .tm-month-label{ font-size:1.3rem; font-weight:700; letter-spacing:.3px; padding:.2rem .5rem; border-radius:8px; }
+#tm-app .tm-month-label:hover{ color: var(--tm-accent); }
+#tm-app .tm-iconbtn{ width:34px; height:34px; border-radius:8px; font-size:1.4rem; line-height:1; color:var(--tm-muted); transition:.15s; }
+#tm-app .tm-iconbtn:hover{ background:var(--tm-card); color:var(--tm-text); }
+#tm-app .tm-summary{ font-size:.85rem; color:var(--tm-muted); }
+#tm-app .tm-summary b{ color:var(--tm-done); }
+
+/* 레이아웃 */
+#tm-app .tm-grid{ display:grid; grid-template-columns: minmax(280px, 1.05fr) 1.2fr; gap:1.6rem; align-items:start; }
+@media (max-width: 800px){ #tm-app .tm-grid{ grid-template-columns:1fr; } }
+
+/* 캘린더 */
+#tm-app .tm-weekdays{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:.5rem; }
+#tm-app .tm-weekdays span{ text-align:center; font-size:.78rem; font-weight:600; color:var(--tm-muted); }
+#tm-app .tm-weekdays .tm-sat{ color:#5b8def; }
+#tm-app .tm-weekdays .tm-sun{ color:#e0606b; }
+#tm-app .tm-days{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+#tm-app .tm-cell{ aspect-ratio:1/1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; background:transparent; transition:background .15s, transform .08s; position:relative; }
+#tm-app .tm-cell.tm-empty{ visibility:hidden; }
+#tm-app .tm-cell:hover{ background:var(--tm-card); }
+#tm-app .tm-cell:active{ transform:scale(.96); }
+#tm-app .tm-cell.tm-selected{ background:var(--tm-card); outline:2px solid var(--tm-accent); }
+#tm-app .tm-badge{ width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:700; transition:.15s; }
+/* 할 일 없음 → 작은 점 */
+#tm-app .tm-badge.tm-dot{ width:5px; height:5px; background:var(--tm-line); }
+#tm-app .tm-cell:hover .tm-badge.tm-dot{ background:var(--tm-muted); }
+/* 할 일 있음, 미완료 → 옅은 링 + 개수 */
+#tm-app .tm-badge.tm-open{ border:1.5px solid var(--tm-line); color:var(--tm-muted); }
+/* 일부 완료 → 테마색 링 + 완료 개수 */
+#tm-app .tm-badge.tm-partial{ border:1.5px solid var(--tm-accent); color:var(--tm-accent); }
+/* 전부 완료 → 채워진 테마색 + 체크 */
+#tm-app .tm-badge.tm-has{ background:var(--tm-accent); color:#fff; }
+#tm-app .tm-badge.tm-has svg{ width:13px; height:13px; }
+#tm-app .tm-date{ font-size:.82rem; font-weight:600; color:var(--tm-text); }
+#tm-app .tm-date.tm-sat{ color:#5b8def; }
+#tm-app .tm-date.tm-sun{ color:#e0606b; }
+#tm-app .tm-cell.tm-today .tm-date{ background:var(--tm-text); color:var(--tm-bg); border-radius:50%; width:1.55em; height:1.55em; display:inline-flex; align-items:center; justify-content:center; }
+
+/* 패널 (오른쪽 할 일) */
+#tm-app .tm-panel-head h3{ margin:0 0 1rem; font-size:1.05rem; }
+#tm-app #tm-lists{ max-height:clamp(200px, 70vh, 900px); overflow-y:auto; padding-right:.4rem; scrollbar-width:thin; scrollbar-color:var(--tm-line) transparent; }
+#tm-app #tm-lists::-webkit-scrollbar{ width:7px; }
+#tm-app #tm-lists::-webkit-scrollbar-track{ background:transparent; }
+#tm-app #tm-lists::-webkit-scrollbar-thumb{ background:var(--tm-line); border-radius:99px; }
+#tm-app .tm-cat{ margin-bottom:1.1rem; }
+#tm-app .tm-cat-head{ display:inline-flex; align-items:center; gap:.4rem; background:var(--tm-card); padding:.32rem .55rem .32rem .7rem; border-radius:999px; margin-bottom:.5rem; }
+#tm-app .tm-cat-name{ font-weight:700; font-size:.9rem; font-style:italic; }
+#tm-app .tm-cat-add{ width:22px; height:22px; border-radius:50%; background:var(--tm-bg); color:var(--tm-muted); font-size:1rem; line-height:1; display:flex; align-items:center; justify-content:center; }
+#tm-app .tm-cat-add:hover{ color:var(--tm-text); }
+#tm-app .tm-cat-edit{ font-size:.72rem; color:var(--tm-muted); margin-left:.1rem; opacity:0; transition:.15s; }
+#tm-app .tm-cat-head:hover .tm-cat-edit{ opacity:1; }
+#tm-app .tm-cat-edit:hover{ color:var(--tm-text); }
+#tm-app .tm-cat-name[contenteditable]{ outline:none; cursor:text; border-bottom:1px dashed currentColor; padding-bottom:1px; }
+#tm-app .tm-cat-del{ font-size:.72rem; color:var(--tm-muted); margin-left:.1rem; opacity:0; transition:.15s; }
+#tm-app .tm-cat-head:hover .tm-cat-del{ opacity:1; }
+
+#tm-app .tm-item{ display:flex; align-items:flex-start; gap:.6rem; padding:.32rem .25rem; border-radius:8px; }
+#tm-app .tm-item:hover{ background:var(--tm-card); }
+#tm-app .tm-check{ flex:0 0 auto; width:20px; height:20px; border-radius:6px; border:1.5px solid var(--tm-line); margin-top:2px; display:flex; align-items:center; justify-content:center; transition:.15s; }
+#tm-app .tm-check:hover{ border-color:var(--tm-cat-color, var(--tm-done)); }
+#tm-app .tm-item.tm-done .tm-check{ background:var(--tm-cat-color, var(--tm-done)); border-color:var(--tm-cat-color, var(--tm-done)); }
+#tm-app .tm-check svg{ width:12px; height:12px; opacity:0; transition:.15s; }
+#tm-app .tm-item.tm-done .tm-check svg{ opacity:1; }
+#tm-app .tm-text{ flex:1; line-height:1.5; font-size:.92rem; word-break:break-word; }
+#tm-app .tm-item.tm-done .tm-text{ color:var(--tm-muted); text-decoration:line-through; }
+#tm-app .tm-text[contenteditable]{ outline:none; }
+#tm-app .tm-text:empty::before{ content:'할 일 입력 후 Enter'; color:var(--tm-muted); }
+#tm-app .tm-item-del{ flex:0 0 auto; color:var(--tm-muted); font-size:.95rem; opacity:0; transition:.15s; padding:0 .2rem; }
+#tm-app .tm-item:hover .tm-item-del{ opacity:1; }
+#tm-app .tm-item-del:hover{ color:#e0606b; }
+#tm-app .tm-empty-note{ color:var(--tm-muted); font-size:.88rem; padding:.5rem 0; }
+
+/* 읽기 전용(토큰 없음)일 때 편집 요소 숨김 */
+#tm-app:not(.tm-can-edit) .tm-edit-only{ display:none; }
+#tm-app:not(.tm-can-edit) .tm-cat-add,
+#tm-app:not(.tm-can-edit) .tm-cat-edit,
+#tm-app:not(.tm-can-edit) .tm-cat-del,
+#tm-app:not(.tm-can-edit) .tm-item-del{ display:none; }
+#tm-app:not(.tm-can-edit) .tm-check{ pointer-events:none; }
+
+/* 도구 */
+#tm-app .tm-tools{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; margin-top:2rem; padding-top:1.2rem; border-top:1px solid var(--tm-line); }
+#tm-app .tm-toolbtn{ font-size:.82rem; padding:.4rem .8rem; border-radius:8px; background:var(--tm-card); color:var(--tm-muted); transition:.15s; }
+#tm-app .tm-toolbtn:hover{ color:var(--tm-text); }
+#tm-app .tm-toolbtn:disabled{ opacity:.45; cursor:default; }
+#tm-app .tm-toolbtn.tm-save{ background:var(--tm-accent); color:#fff; }
+#tm-app .tm-toolbtn.tm-save:hover{ filter:brightness(1.08); color:#fff; }
+#tm-app .tm-tools-spacer{ flex:1 1 auto; }
+#tm-app .tm-status{ font-size:.78rem; color:var(--tm-muted); }
+#tm-app .tm-status.tm-dirty{ color:var(--tm-accent); }
+
+/* ── 모달 공통 ── */
+#tm-app .tm-modal{ position:fixed; inset:0; z-index:2000; display:flex; align-items:center; justify-content:center; padding:1rem; }
+#tm-app .tm-modal[hidden]{ display:none; }
+#tm-app .tm-modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(2px); }
+#tm-app .tm-modal-card{ position:relative; width:100%; max-width:470px; max-height:85vh; overflow:auto; background:var(--tm-card); border:1px solid var(--tm-line); border-radius:16px; padding:1.4rem 1.5rem; animation:tm-pop .18s ease; }
+@keyframes tm-pop{ from{ opacity:0; transform:translateY(8px) scale(.98); } to{ opacity:1; transform:none; } }
+#tm-app .tm-modal-head{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+#tm-app .tm-modal-head h3{ margin:0; font-size:1.12rem; margin-right:auto; }
+#tm-app .tm-modal-close{ width:30px; height:30px; border-radius:8px; color:var(--tm-muted); font-size:1rem; }
+#tm-app .tm-modal-close:hover{ background:var(--tm-bg); color:var(--tm-text); }
+#tm-app .tm-seg{ display:inline-flex; gap:4px; }
+#tm-app .tm-seg-btn{ font-size:.76rem; padding:.26rem .62rem; border-radius:7px; color:var(--tm-muted); border:1px solid var(--tm-line); transition:.15s; }
+#tm-app .tm-seg-btn:hover{ color:var(--tm-text); }
+#tm-app .tm-seg-btn.tm-active{ color:#fff; background:var(--tm-accent); border-color:var(--tm-accent); }
+
+/* 토큰 모달 */
+#tm-app .tm-token-desc{ font-size:.84rem; color:var(--tm-muted); line-height:1.55; margin:0 0 .9rem; }
+#tm-app .tm-token-input{ width:100%; padding:.6rem .7rem; border-radius:9px; border:1px solid var(--tm-line); background:var(--tm-bg); color:var(--tm-text); font-size:.86rem; font-family:monospace; }
+#tm-app .tm-token-input:focus{ outline:none; border-color:var(--tm-accent); }
+#tm-app .tm-token-actions{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-top:.9rem; }
+#tm-app .tm-token-link{ font-size:.8rem; color:var(--tm-accent); text-decoration:none; }
+#tm-app .tm-token-link:hover{ text-decoration:underline; }
+#tm-app .tm-token-err{ color:#e0606b; font-size:.8rem; margin:.7rem 0 0; }
+
+/* 토스트 */
+#tm-app .tm-toast{ position:fixed; left:50%; bottom:84px; transform:translateX(-50%) translateY(8px); z-index:2100; background:var(--tm-text); color:var(--tm-bg); font-size:.84rem; padding:.6rem 1rem; border-radius:10px; opacity:0; transition:.25s; max-width:90vw; text-align:center; box-shadow:0 6px 24px rgba(0,0,0,.25); }
+#tm-app .tm-toast.tm-show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* 요약 (링 + 메타) */
+#tm-app .tm-stat-top{ display:flex; align-items:center; gap:1.3rem; padding-bottom:1.2rem; border-bottom:1px solid var(--tm-line); }
+#tm-app .tm-ring{ position:relative; flex:0 0 auto; width:104px; height:104px; border-radius:50%; background:conic-gradient(var(--tm-done) calc(var(--pct,0)*1%), var(--tm-line) 0); display:grid; place-items:center; }
+#tm-app .tm-ring-hole{ width:78px; height:78px; border-radius:50%; background:var(--tm-card); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+#tm-app .tm-ring-pct{ font-size:1.35rem; font-weight:800; line-height:1; }
+#tm-app .tm-ring-sub{ font-size:.66rem; color:var(--tm-muted); margin-top:2px; }
+#tm-app .tm-stat-meta{ display:flex; flex-direction:column; gap:.28rem; }
+#tm-app .tm-stat-scope{ font-size:.76rem; color:var(--tm-muted); }
+#tm-app .tm-stat-big{ font-size:1.02rem; }
+#tm-app .tm-stat-big b{ color:var(--tm-done); font-size:1.3rem; }
+#tm-app .tm-stat-sub{ font-size:.8rem; color:var(--tm-muted); }
+
+/* 카테고리별 막대 */
+#tm-app .tm-stat-label{ font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--tm-muted); margin:1.1rem 0 .2rem; }
+#tm-app .tm-stat-row{ display:flex; align-items:center; gap:.6rem; padding:.5rem 0; }
+#tm-app .tm-stat-dot{ width:9px; height:9px; border-radius:50%; flex:0 0 auto; }
+#tm-app .tm-stat-name{ font-weight:600; font-size:.88rem; flex:0 0 auto; min-width:82px; }
+#tm-app .tm-stat-frac{ font-size:.76rem; color:var(--tm-muted); flex:0 0 auto; font-variant-numeric:tabular-nums; }
+#tm-app .tm-stat-bar{ flex:1 1 auto; min-width:40px; height:7px; border-radius:99px; background:var(--tm-line); overflow:hidden; }
+#tm-app .tm-stat-fill{ height:100%; border-radius:99px; transition:width .4s ease; }
+#tm-app .tm-stat-pct{ font-size:.76rem; font-weight:700; flex:0 0 auto; width:38px; text-align:right; font-variant-numeric:tabular-nums; }
+#tm-app .tm-stat-empty{ margin-left:auto; font-size:.76rem; color:var(--tm-muted); }
+
+#tm-app :focus-visible{ outline:2px solid var(--tm-accent); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce){ #tm-app *{ transition:none !important; animation:none !important; } }
+</style>
+
+<script>
+(function () {
+  "use strict";
+
+  // ── GitHub 저장 설정 (레포가 바뀌면 여기만 수정) ───────────────────────
+  const GH = { owner: "Bigeco", repo: "bigeco.github.io", path: "assets/data/todos.json", branch: "main" };
+
+  // ── 기본 카테고리 (이름/색상 자유롭게 수정) ─────────────────────────────
+  const DEFAULT_CATEGORIES = [
+    { id: "study",       name: "Study",       color: "#2ec4c4" },
+    { id: "rnd",         name: "R&D",         color: "#3fbf6f" },
+    { id: "competition", name: "Competition", color: "#e0c14b" },
+    { id: "routine",     name: "Routine",     color: "#e0606b" },
+    { id: "etc",         name: "etc",         color: "#9aa0a6" }
+  ];
+
+  const app = document.getElementById("tm-app");
+  if (!app) return;
+  const CACHE_KEY = app.dataset.storageKey || "bigeco-todo-v1";  // 로컬 임시본/캐시
+  const TOKEN_KEY = "bigeco-todo-token";                          // 관리자 토큰(이 브라우저 전용)
+  const DATA_URL  = app.dataset.dataUrl || "/assets/data/todos.json";
+
+  const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // ── 상태 ───────────────────────────────────────────────────────────────
+  let token = localStorage.getItem(TOKEN_KEY) || "";
+  let remoteSha = null;                              // 원격 파일 sha(커밋 시 필요)
+  let dirty = false;                                 // 미저장 변경 여부
+  let state = normalize(loadCache() || { categories: DEFAULT_CATEGORIES.slice(), todos: {} });
+  let view = startOfMonth(new Date());               // 현재 보는 달
+  let selected = toKey(new Date());                  // 선택된 날짜
+  let statsRange = "all";                            // 통계 범위
+
+  function canEdit(){ return !!token; }
+  function normalize(d){
+    return {
+      categories: (d && d.categories && d.categories.length) ? d.categories : DEFAULT_CATEGORIES.slice(),
+      todos: (d && d.todos) ? d.todos : {}
+    };
+  }
+  function isEmptyData(d){ return !d || !d.todos || Object.keys(d.todos).length === 0; }
+
+  // ── 로컬 캐시(임시본) ──────────────────────────────────────────────────
+  function loadCache(){
+    try { const r = localStorage.getItem(CACHE_KEY); if (r){ const d = JSON.parse(r); if (d && d.categories && d.todos) return d; } }
+    catch (e) { /* ignore */ }
+    return null;
+  }
+  function saveCache(){ try { localStorage.setItem(CACHE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+  // 편집 후 호출(기존 코드 호환): 임시본 저장 + 변경표시
+  function save(){ saveCache(); dirty = true; updateStatus(); }
+
+  // ── base64 (UTF-8 안전) ────────────────────────────────────────────────
+  function b64encode(str){
+    const bytes = new TextEncoder().encode(str);
+    let bin = ""; for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function b64decode(b64){
+    const bin = atob((b64 || "").replace(/\s/g, ""));
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
+
+  // ── 원격 읽기/저장 ─────────────────────────────────────────────────────
+  async function fetchRemote(){
+    if (canEdit()){
+      // 관리자: GitHub API(항상 최신 + sha)
+      const url = "https://api.github.com/repos/" + GH.owner + "/" + GH.repo + "/contents/" + GH.path + "?ref=" + GH.branch;
+      const res = await fetch(url, { headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" }, cache: "no-store" });
+      if (res.status === 404){ remoteSha = null; return null; }            // 파일 아직 없음
+      if (res.status === 401 || res.status === 403){ const e = new Error("auth"); e.code = res.status; throw e; }
+      if (!res.ok) throw new Error("http " + res.status);
+      const j = await res.json();
+      remoteSha = j.sha;
+      return JSON.parse(b64decode(j.content));
+    } else {
+      // 방문자: 게시된 JSON
+      const res = await fetch(DATA_URL + (DATA_URL.indexOf("{{") === -1 ? "?t=" + Date.now() : ""), { cache: "no-store" });
+      if (!res.ok) return null;
+      try { return await res.json(); } catch (e) { return null; }
+    }
+  }
+
+  async function loadData(){
+    let remote = null;
+    try { remote = await fetchRemote(); }
+    catch (e) {
+      if (e.message === "auth"){ toast("토큰이 유효하지 않아요. 다시 설정해 주세요."); clearToken(); }
+    }
+    const cache = loadCache();
+    if (remote && !isEmptyData(remote)){
+      state = normalize(remote); saveCache(); dirty = false;
+    } else if (remote && isEmptyData(remote)){
+      // 원격이 비어 있음: 이 브라우저 임시본이 있으면 살려서 다음 저장 때 올림
+      if (cache && !isEmptyData(cache)){ state = normalize(cache); dirty = true; }
+      else { state = normalize(remote); dirty = false; }
+    } else {
+      state = normalize(cache || { categories: DEFAULT_CATEGORIES.slice(), todos: {} });
+    }
+    applyEditMode();
+    renderCalendar(); renderLists(); updateStatus();
+    requestAnimationFrame(fitListHeight);
+  }
+
+  async function commitData(){
+    if (!canEdit()) return;
+    const saveBtn = document.querySelector('[data-act="save"]');
+    if (saveBtn){ saveBtn.disabled = true; saveBtn.textContent = "저장 중…"; }
+    try {
+      if (remoteSha === null){ try { await fetchRemote(); } catch (e) {} }  // 최신 sha 시도(없으면 새 파일)
+      const body = {
+        message: "todo 업데이트 (" + todayKey() + ")",
+        content: b64encode(JSON.stringify(state, null, 2)),
+        branch: GH.branch
+      };
+      if (remoteSha) body.sha = remoteSha;
+      const res = await fetch("https://api.github.com/repos/" + GH.owner + "/" + GH.repo + "/contents/" + GH.path, {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      if (res.status === 401 || res.status === 403){ toast("권한이 없어요. 토큰의 Contents 쓰기 권한을 확인해 주세요."); return; }
+      if (res.status === 409){ toast("다른 곳에서 먼저 수정됐어요. 새로고침 후 다시 시도해 주세요."); remoteSha = null; return; }
+      if (!res.ok){ toast("저장 실패 (" + res.status + ")"); return; }
+      const j = await res.json();
+      remoteSha = j.content && j.content.sha ? j.content.sha : remoteSha;
+      dirty = false; saveCache();
+      toast("저장됐어요. 사이트 반영까지 잠시 걸릴 수 있어요.");
+    } catch (e) {
+      toast("저장 중 오류가 났어요. 네트워크를 확인해 주세요.");
+    } finally {
+      if (saveBtn){ saveBtn.textContent = "저장"; }
+      updateStatus();
+    }
+  }
+
+  // ── 관리자 모드 / 토큰 ─────────────────────────────────────────────────
+  function applyEditMode(){
+    app.classList.toggle("tm-can-edit", canEdit());
+    const btn = document.getElementById("tm-admin-btn");
+    if (btn) btn.textContent = canEdit() ? "수정 잠금" : "관리자 모드";
+    updateStatus();
+  }
+  function updateStatus(){
+    const el = document.getElementById("tm-status");
+    const saveBtn = document.querySelector('[data-act="save"]');
+    if (!el) return;
+    if (!canEdit()){ el.textContent = ""; el.classList.remove("tm-dirty"); if (saveBtn) saveBtn.disabled = true; return; }
+    el.textContent = dirty ? "● 저장 안 됨" : "저장됨";
+    el.classList.toggle("tm-dirty", dirty);
+    if (saveBtn) saveBtn.disabled = !dirty;
+  }
+  function openToken(){
+    const err = document.getElementById("tm-token-err"); err.hidden = true;
+    document.getElementById("tm-token-input").value = "";
+    document.getElementById("tm-token").hidden = false;
+    document.getElementById("tm-token-input").focus();
+  }
+  function closeToken(){ document.getElementById("tm-token").hidden = true; }
+  async function saveToken(){
+    const input = document.getElementById("tm-token-input");
+    const err = document.getElementById("tm-token-err");
+    const v = input.value.trim();
+    if (!v){ err.textContent = "토큰을 입력해 주세요."; err.hidden = false; return; }
+    token = v;
+    try {
+      await fetchRemote();                          // 인증 확인(+sha 확보). 404도 정상(파일 없음)
+      localStorage.setItem(TOKEN_KEY, token);
+      closeToken(); applyEditMode();
+      await loadData();
+      toast("관리자 모드로 전환됐어요.");
+    } catch (e) {
+      token = "";
+      err.textContent = "토큰이 유효하지 않거나 이 레포 권한이 없어요.";
+      err.hidden = false;
+    }
+  }
+  function clearToken(){ token = ""; localStorage.removeItem(TOKEN_KEY); applyEditMode(); }
+  function adminToggle(){
+    if (canEdit()){
+      if (dirty && !confirm("저장하지 않은 변경이 있어요. 수정 모드를 끄면 저장되지 않은 내용은 이 브라우저에만 남아요. 계속할까요?")) return;
+      clearToken();
+      loadData();
+      toast("읽기 전용으로 전환됐어요.");
+    } else {
+      openToken();
+    }
+  }
+
+  // ── 토스트 ─────────────────────────────────────────────────────────────
+  let toastTimer;
+  function toast(msg){
+    const el = document.getElementById("tm-toast");
+    if (!el) return;
+    el.textContent = msg; el.hidden = false;
+    requestAnimationFrame(() => el.classList.add("tm-show"));
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.classList.remove("tm-show"); setTimeout(() => { el.hidden = true; }, 260); }, 3200);
+  }
+
+  // ── 날짜 유틸 ──────────────────────────────────────────────────────────
+  function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+  function pad(n){ return String(n).padStart(2, "0"); }
+  function toKey(d){ return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()); }
+  function todayKey(){ return toKey(new Date()); }
+
+  // ── 렌더: 달력 ─────────────────────────────────────────────────────────
+  function renderCalendar() {
+    const y = view.getFullYear(), m = view.getMonth();
+    document.getElementById("tm-month-text").textContent = y + "년 " + (m + 1) + "월";
+
+    const first = new Date(y, m, 1);
+    const offset = (first.getDay() + 6) % 7;     // 월요일 시작
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const cells = [];
+
+    for (let i = 0; i < offset; i++) cells.push('<div class="tm-cell tm-empty"></div>');
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(y, m, day);
+      const key = toKey(date);
+      const items = state.todos[key] || [];
+      const total = items.length;
+      const done = items.filter(t => t.done).length;
+      const dow = date.getDay();
+
+      let badgeClass, badgeContent = "";
+      if (total === 0)          { badgeClass = "tm-badge tm-dot"; }
+      else if (done === total)  { badgeClass = "tm-badge tm-has"; badgeContent = CHECK_SVG; }
+      else if (done > 0)        { badgeClass = "tm-badge tm-partial"; badgeContent = String(done); }
+      else                      { badgeClass = "tm-badge tm-open"; badgeContent = String(total); }
+
+      const cls = ["tm-cell"];
+      if (key === selected) cls.push("tm-selected");
+      if (key === todayKey()) cls.push("tm-today");
+
+      const dateCls = ["tm-date"];
+      if (dow === 6) dateCls.push("tm-sat");
+      if (dow === 0) dateCls.push("tm-sun");
+
+      cells.push(
+        '<div class="' + cls.join(" ") + '" data-key="' + key + '" role="button" tabindex="0" aria-label="' + key + '">' +
+          '<div class="' + badgeClass + '">' + badgeContent + "</div>" +
+          '<div class="' + dateCls.join(" ") + '">' + day + "</div>" +
+        "</div>"
+      );
+    }
+    document.getElementById("tm-days").innerHTML = cells.join("");
+    renderSummary();
+  }
+
+  // ── 렌더: 월간 요약 ────────────────────────────────────────────────────
+  function renderSummary() {
+    const y = view.getFullYear(), m = view.getMonth();
+    let done = 0, active = 0;
+    Object.keys(state.todos).forEach(k => {
+      const parts = k.split("-").map(Number);
+      if (parts[0] === y && parts[1] === m + 1) {
+        state.todos[k].forEach(t => { if (t.done) done++; else active++; });
+      }
+    });
+    document.getElementById("tm-summary").innerHTML =
+      "이번 달 <b>" + done + "</b>개 완료 · 남은 일 " + active + "개";
+  }
+
+  // ── 렌더: 선택한 날짜의 할 일 ──────────────────────────────────────────
+  function renderLists() {
+    const head = document.getElementById("tm-selected-date");
+    const d = new Date(selected + "T00:00:00");
+    const wk = ["일","월","화","수","목","금","토"][d.getDay()];
+    head.textContent = (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + wk + ")";
+
+    const items = state.todos[selected] || [];
+    const box = document.getElementById("tm-lists");
+    let html = "";
+
+    state.categories.forEach(cat => {
+      const catItems = items.filter(t => t.cat === cat.id);
+      html += '<div class="tm-cat" data-cat="' + cat.id + '" style="--tm-cat-color:' + cat.color + '">';
+      html +=   '<span class="tm-cat-head" style="--tm-accent:' + cat.color + '">' +
+                  '<span class="tm-cat-name" style="color:' + cat.color + '">' + esc(cat.name) + "</span>" +
+                  '<button class="tm-cat-add" data-add="' + cat.id + '" aria-label="할 일 추가">+</button>' +
+                  '<button class="tm-cat-edit" data-editcat="' + cat.id + '" aria-label="카테고리 이름 수정">✎</button>' +
+                  '<button class="tm-cat-del" data-delcat="' + cat.id + '" aria-label="카테고리 삭제">✕</button>' +
+                "</span>";
+      catItems.forEach(t => {
+        html += '<div class="tm-item ' + (t.done ? "tm-done" : "") + '" data-id="' + t.id + '">' +
+                  '<button class="tm-check" data-toggle="' + t.id + '" aria-label="완료 토글">' + CHECK_SVG + "</button>" +
+                  '<span class="tm-text">' + esc(t.text) + "</span>" +
+                  '<button class="tm-item-del" data-del="' + t.id + '" aria-label="삭제">✕</button>' +
+                "</div>";
+      });
+      html += "</div>";
+    });
+
+    if (!items.length) html += '<p class="tm-empty-note">' + (canEdit() ? "아직 등록한 일이 없어요. 카테고리의 + 를 눌러 추가하세요." : "이 날 기록된 할 일이 없어요.") + '</p>';
+    box.innerHTML = html;
+    requestAnimationFrame(fitListHeight);
+  }
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+  // ── 리스트 높이를 남은 화면에 맞춰 페이지 스크롤 제거 ──────────────────
+  function fitListHeight() {
+    const lists = document.getElementById("tm-lists");
+    if (!lists) return;
+    lists.style.maxHeight = "";
+    const footer = document.querySelector("footer");
+    const footerH = footer ? footer.offsetHeight : 0;
+    const current = lists.getBoundingClientRect().height;
+    const overflow = document.documentElement.scrollHeight - window.innerHeight + footerH + 12;
+    if (overflow > 0) lists.style.maxHeight = Math.max(160, Math.floor(current - overflow)) + "px";
+  }
+
+  // ── 할 일 추가 (인라인 입력) ───────────────────────────────────────────
+  function addItem(catId) {
+    const catBox = document.querySelector('.tm-cat[data-cat="' + catId + '"]');
+    if (!catBox) return;
+    const row = document.createElement("div");
+    row.className = "tm-item";
+    row.innerHTML =
+      '<button class="tm-check" tabindex="-1">' + CHECK_SVG + "</button>" +
+      '<span class="tm-text" contenteditable="true"></span>';
+    catBox.appendChild(row);
+    const field = row.querySelector(".tm-text");
+    field.focus();
+
+    function commit() {
+      const text = field.textContent.trim();
+      if (text) {
+        if (!state.todos[selected]) state.todos[selected] = [];
+        state.todos[selected].push({ id: uid(), cat: catId, text: text, done: false });
+        save();
+        renderLists();
+        renderCalendar();
+      } else {
+        row.remove();
+      }
+    }
+    field.addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); commit(); }
+      else if (e.key === "Escape") { row.remove(); }
+    });
+    field.addEventListener("blur", commit);
+  }
+
+  function toggleItem(id) {
+    const items = state.todos[selected] || [];
+    const it = items.find(x => x.id === id);
+    if (it) { it.done = !it.done; save(); renderLists(); renderCalendar(); }
+  }
+  function deleteItem(id) {
+    const items = state.todos[selected] || [];
+    state.todos[selected] = items.filter(x => x.id !== id);
+    if (!state.todos[selected].length) delete state.todos[selected];
+    save(); renderLists(); renderCalendar();
+  }
+
+  // ── 카테고리 관리 ──────────────────────────────────────────────────────
+  function addCategory() {
+    const name = prompt("새 카테고리 이름:");
+    if (!name || !name.trim()) return;
+    const color = prompt("색상 (hex, 예: #3fbf6f):", "#2ec4c4") || "#2ec4c4";
+    state.categories.push({ id: uid(), name: name.trim(), color: color.trim() });
+    save(); renderLists();
+  }
+  function editCategory(id) {
+    const cat = state.categories.find(c => c.id === id);
+    const nameEl = document.querySelector('.tm-cat[data-cat="' + id + '"] .tm-cat-name');
+    if (!cat || !nameEl) return;
+    const original = cat.name;
+
+    nameEl.setAttribute("contenteditable", "true");
+    nameEl.focus();
+    const range = document.createRange();
+    range.selectNodeContents(nameEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
+
+    let finished = false;
+    function commit(keep) {
+      if (finished) return; finished = true;
+      const v = nameEl.textContent.trim();
+      if (keep && v && v !== original) { cat.name = v; save(); }
+      renderLists();
+    }
+    nameEl.addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); commit(true); }
+      else if (e.key === "Escape") { e.preventDefault(); commit(false); }
+    });
+    nameEl.addEventListener("blur", () => commit(true));
+  }
+  function deleteCategory(id) {
+    const cat = state.categories.find(c => c.id === id);
+    if (!cat) return;
+    if (!confirm('"' + cat.name + '" 카테고리를 삭제할까요? (이 카테고리의 모든 할 일도 함께 삭제됩니다)')) return;
+    state.categories = state.categories.filter(c => c.id !== id);
+    Object.keys(state.todos).forEach(k => {
+      state.todos[k] = state.todos[k].filter(t => t.cat !== id);
+      if (!state.todos[k].length) delete state.todos[k];
+    });
+    save(); renderLists(); renderCalendar();
+  }
+
+  // ── 통계 ───────────────────────────────────────────────────────────────
+  function computeStats(range) {
+    const y = view.getFullYear(), m = view.getMonth();
+    const perCat = {};
+    state.categories.forEach(c => { perCat[c.id] = { total: 0, done: 0 }; });
+    let total = 0, done = 0;
+    const activeDays = new Set();
+
+    Object.keys(state.todos).forEach(k => {
+      if (range === "month") {
+        const parts = k.split("-").map(Number);
+        if (parts[0] !== y || parts[1] !== m + 1) return;
+      }
+      state.todos[k].forEach(t => {
+        if (!perCat[t.cat]) perCat[t.cat] = { total: 0, done: 0 };
+        perCat[t.cat].total++; total++;
+        if (t.done) { perCat[t.cat].done++; done++; activeDays.add(k); }
+      });
+    });
+    return { perCat, total, done, activeDays: activeDays.size };
+  }
+  function setSegActive() {
+    document.querySelectorAll("#tm-stats .tm-seg-btn").forEach(b => {
+      b.classList.toggle("tm-active", b.dataset.range === statsRange);
+    });
+  }
+  function renderStats() {
+    const stats = computeStats(statsRange);
+    const perCat = stats.perCat, total = stats.total, done = stats.done, activeDays = stats.activeDays;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    const y = view.getFullYear(), m = view.getMonth();
+    const scope = statsRange === "month" ? (y + "년 " + (m + 1) + "월") : "전체 기간";
+    const body = document.getElementById("tm-stats-body");
+
+    if (!total) {
+      body.innerHTML = '<p class="tm-empty-note" style="text-align:center;padding:2.5rem 0">' + scope + '에 기록된 할 일이 없어요.</p>';
+      return;
+    }
+
+    let best = null;
+    state.categories.forEach(c => {
+      const s = perCat[c.id] || { done: 0 };
+      if (!best || s.done > best.done) best = { name: c.name, done: s.done, color: c.color };
+    });
+
+    let html = "";
+    html += '<div class="tm-stat-top">';
+    html +=   '<div class="tm-ring" style="--pct:' + pct + '">' +
+                '<div class="tm-ring-hole"><span class="tm-ring-pct">' + pct + '%</span>' +
+                '<span class="tm-ring-sub">달성률</span></div></div>';
+    html +=   '<div class="tm-stat-meta">';
+    html +=     '<div class="tm-stat-scope">' + scope + '</div>';
+    html +=     '<div class="tm-stat-big"><b>' + done + '</b> / ' + total + ' 완료</div>';
+    html +=     '<div class="tm-stat-sub">활동한 날 ' + activeDays + '일</div>';
+    if (best && best.done > 0)
+      html +=   '<div class="tm-stat-sub">최다 완료 · <span style="color:' + best.color + '">' + esc(best.name) + '</span> ' + best.done + '개</div>';
+    html +=   '</div>';
+    html += '</div>';
+
+    html += '<div class="tm-stat-label">카테고리별 달성률</div>';
+    html += '<div class="tm-stat-list">';
+    state.categories.forEach(c => {
+      const s = perCat[c.id] || { done: 0, total: 0 };
+      const cp = s.total ? Math.round((s.done / s.total) * 100) : 0;
+      html += '<div class="tm-stat-row">';
+      html +=   '<span class="tm-stat-dot" style="background:' + c.color + '"></span>';
+      html +=   '<span class="tm-stat-name">' + esc(c.name) + '</span>';
+      if (s.total) {
+        html += '<span class="tm-stat-frac">' + s.done + '/' + s.total + '</span>';
+        html += '<div class="tm-stat-bar"><div class="tm-stat-fill" style="width:' + cp + '%;background:' + c.color + '"></div></div>';
+        html += '<span class="tm-stat-pct">' + cp + '%</span>';
+      } else {
+        html += '<span class="tm-stat-empty">기록 없음</span>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+
+    body.innerHTML = html;
+  }
+  function openStats(){ setSegActive(); renderStats(); document.getElementById("tm-stats").hidden = false; }
+  function closeStats(){ document.getElementById("tm-stats").hidden = true; }
+
+  // ── 이벤트 위임 ────────────────────────────────────────────────────────
+  app.addEventListener("click", e => {
+    const t = e.target.closest("[data-act],[data-key],[data-toggle],[data-del],[data-add],[data-editcat],[data-delcat],[data-range]");
+    if (!t) return;
+
+    if (t.dataset.act) {
+      const a = t.dataset.act;
+      if (a === "prev") { view.setMonth(view.getMonth() - 1); renderCalendar(); }
+      else if (a === "next") { view.setMonth(view.getMonth() + 1); renderCalendar(); }
+      else if (a === "today") { view = startOfMonth(new Date()); selected = todayKey(); renderCalendar(); renderLists(); }
+      else if (a === "add-category") { if (canEdit()) addCategory(); }
+      else if (a === "stats") openStats();
+      else if (a === "close-stats") closeStats();
+      else if (a === "save") commitData();
+      else if (a === "admin") adminToggle();
+      else if (a === "close-token") closeToken();
+      else if (a === "save-token") saveToken();
+      return;
+    }
+    if (t.dataset.range) { statsRange = t.dataset.range; setSegActive(); renderStats(); return; }
+    if (t.dataset.key) { selected = t.dataset.key; renderCalendar(); renderLists(); return; }
+    // 아래는 편집 동작 → 관리자만
+    if (t.dataset.toggle)  { if (canEdit()) toggleItem(t.dataset.toggle); return; }
+    if (t.dataset.del)     { if (canEdit()) deleteItem(t.dataset.del); return; }
+    if (t.dataset.add)     { if (canEdit()) addItem(t.dataset.add); return; }
+    if (t.dataset.editcat) { if (canEdit()) editCategory(t.dataset.editcat); return; }
+    if (t.dataset.delcat)  { if (canEdit()) deleteCategory(t.dataset.delcat); return; }
+  });
+
+  // ESC 로 모달 닫기
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (!document.getElementById("tm-stats").hidden) closeStats();
+    if (!document.getElementById("tm-token").hidden) closeToken();
+  });
+  // 토큰 입력 Enter 제출
+  document.getElementById("tm-token-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); saveToken(); }
+  });
+
+  // 달력 셀 키보드 접근
+  app.addEventListener("keydown", e => {
+    const cell = e.target.closest(".tm-cell[data-key]");
+    if (cell && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault(); selected = cell.dataset.key; renderCalendar(); renderLists();
+    }
+  });
+
+  // ── 시작 ───────────────────────────────────────────────────────────────
+  let resizeTimer;
+  window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(fitListHeight, 120); });
+
+  applyEditMode();
+  renderCalendar();
+  renderLists();
+  requestAnimationFrame(fitListHeight);
+  loadData();   // 원격(또는 게시본) 최신 데이터로 갱신
+})();
+</script>
