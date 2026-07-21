@@ -71,6 +71,18 @@
         "cat": "competition",
         "text": "언어 | 영어 의문문 만들기",
         "done": true
+      },
+      {
+        "id": "mrunao01d77v",
+        "cat": "routine",
+        "text": "공모전 | 가상융합 XR - 보고서 프로젝트 배경 작성",
+        "done": true
+      },
+      {
+        "id": "mrunao01lymg",
+        "cat": "routine",
+        "text": "공모전 | 가상융합 XR - 보고서 프로젝트 배경 작성",
+        "done": false
       }
     ]
   }
