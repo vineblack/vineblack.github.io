@@ -16,7 +16,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
 ========================================================================== -->
 
 <div id="tm-app"
-     data-storage-key="bigeco-todo-v1"
+     data-storage-key="vineblack-todo-v1"
      data-data-url="{{ '/assets/data/todos.json' | relative_url }}">
   <!-- 상단: 월 네비게이션 + 요약 -->
   <div class="tm-topbar">
@@ -321,7 +321,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
   "use strict";
 
   // ── GitHub 저장 설정 (레포가 바뀌면 여기만 수정) ───────────────────────
-  const GH = { owner: "Bigeco", repo: "bigeco.github.io", path: "assets/data/todos.json", branch: "main" };
+  const GH = { owner: "vineblack", repo: "vineblack.github.io", path: "assets/data/todos.json", branch: "main" };
 
   // ── 기본 카테고리 (이름/색상 자유롭게 수정) ─────────────────────────────
   const DEFAULT_CATEGORIES = [
@@ -334,8 +334,8 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
 
   const app = document.getElementById("tm-app");
   if (!app) return;
-  const CACHE_KEY = app.dataset.storageKey || "bigeco-todo-v1";  // 로컬 임시본/캐시
-  const TOKEN_KEY = "bigeco-todo-token";                          // 관리자 토큰(이 브라우저 전용)
+  const CACHE_KEY = app.dataset.storageKey || "vineblack-todo-v1";  // 로컬 임시본/캐시
+  const TOKEN_KEY = "vineblack-todo-token";                          // 관리자 토큰(이 브라우저 전용)
   const DATA_URL  = app.dataset.dataUrl || "/assets/data/todos.json";
 
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
