@@ -264,6 +264,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
 </style>
 
 <script>
+{% raw %}
 (function () {
   "use strict";
 
@@ -342,7 +343,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
       return JSON.parse(b64decode(j.content));
     } else {
       // 방문자: 게시된 JSON
-      const res = await fetch(DATA_URL + (DATA_URL.indexOf("{{") === -1 ? "?t=" + Date.now() : ""), { cache: "no-store" });
+      const res = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
       if (!res.ok) return null;
       try { return await res.json(); } catch (e) { return null; }
     }
@@ -811,4 +812,5 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
   requestAnimationFrame(fitListHeight);
   loadData();   // 원격(또는 게시본) 최신 데이터로 갱신
 })();
+{% endraw %}
 </script>
