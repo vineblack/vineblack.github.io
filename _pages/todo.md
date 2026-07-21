@@ -94,6 +94,30 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
     </div>
   </div>
 
+  <!-- 글 연결 모달 (관리자 전용) -->
+  <div class="tm-modal" id="tm-link" hidden>
+    <div class="tm-modal-backdrop" data-act="close-link"></div>
+    <div class="tm-modal-card" role="dialog" aria-modal="true" aria-label="글 연결">
+      <div class="tm-modal-head">
+        <h3>글 연결</h3>
+        <button class="tm-modal-close" data-act="close-link" aria-label="닫기">✕</button>
+      </div>
+      <p class="tm-token-desc" id="tm-link-target"></p>
+      <label class="tm-link-label">블로그 글에서 선택</label>
+      <select class="tm-link-select" id="tm-link-select">
+        <option value="">— 직접 URL 입력 —</option>
+      </select>
+      <label class="tm-link-label">링크 URL</label>
+      <input type="text" id="tm-link-input" class="tm-token-input" placeholder="https://… 또는 /blog/2025/…" autocomplete="off" spellcheck="false">
+      <div class="tm-link-actions">
+        <button class="tm-toolbtn" data-act="link-open" id="tm-link-open" hidden>열기 ↗</button>
+        <button class="tm-toolbtn" data-act="link-remove" id="tm-link-remove">연결 해제</button>
+        <span class="tm-tools-spacer"></span>
+        <button class="tm-toolbtn tm-save" data-act="link-save">저장</button>
+      </div>
+    </div>
+  </div>
+
   <div class="tm-toast" id="tm-toast" hidden></div>
 </div>
 
@@ -189,6 +213,25 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
 #tm-app .tm-item-del:hover{ color:#e0606b; }
 #tm-app .tm-empty-note{ color:var(--tm-muted); font-size:.88rem; padding:.5rem 0; }
 
+/* 할 일 ↔ 블로그 글 연결 아이콘 */
+#tm-app .tm-item-link{ flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; width:24px; height:22px; border-radius:6px; color:var(--tm-muted); margin-top:1px; text-decoration:none; background:none; transition:.15s; }
+#tm-app .tm-item-link svg{ width:14px; height:14px; }
+#tm-app .tm-item-link:hover{ background:var(--tm-bg); color:var(--tm-accent); }
+#tm-app .tm-item-link.tm-has-link{ color:var(--tm-accent); }
+/* 관리자 모드에서 링크 없는 항목의 버튼은 hover 시에만 살짝 보이게 */
+#tm-app .tm-can-edit .tm-item-link:not(.tm-has-link){ opacity:0; }
+#tm-app .tm-can-edit .tm-item:hover .tm-item-link:not(.tm-has-link){ opacity:.7; }
+
+/* 글 연결 모달 */
+#tm-app .tm-link-label{ display:block; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--tm-muted); margin:.9rem 0 .35rem; }
+#tm-app .tm-link-select,
+#tm-app #tm-link-input{ width:100%; padding:.55rem .7rem; border-radius:9px; border:1px solid var(--tm-line); background:var(--tm-bg); color:var(--tm-text); font-size:.86rem; }
+#tm-app .tm-link-select:focus,
+#tm-app #tm-link-input:focus{ outline:none; border-color:var(--tm-accent); }
+#tm-app .tm-link-actions{ display:flex; align-items:center; gap:.5rem; margin-top:1.1rem; flex-wrap:wrap; }
+#tm-app #tm-link-target{ font-size:.82rem; margin-bottom:.2rem; }
+#tm-app #tm-link-target b{ color:var(--tm-text); }
+
 /* 읽기 전용(토큰 없음)일 때 편집 요소 숨김 */
 #tm-app:not(.tm-can-edit) .tm-edit-only{ display:none; }
 #tm-app:not(.tm-can-edit) .tm-cat-add,
@@ -264,6 +307,15 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
 </style>
 
 <script>
+  /* 사이트의 모든 블로그 글을 최신순으로 주입 (관리자가 드롭다운에서 고를 수 있게) */
+  window.TM_POSTS = [
+  {% assign tm_sorted_posts = site.posts | sort: 'date' | reverse %}
+  {% for post in tm_sorted_posts %}{ "title": {{ post.title | jsonify }}, "url": {{ post.url | relative_url | jsonify }}, "date": {{ post.date | date: "%Y-%m-%d" | jsonify }} }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+  ];
+</script>
+
+<script>
 {% raw %}
 (function () {
   "use strict";
@@ -287,6 +339,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
   const DATA_URL  = app.dataset.dataUrl || "/assets/data/todos.json";
 
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const LINK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
 
   // ── 상태 ───────────────────────────────────────────────────────────────
   let token = localStorage.getItem(TOKEN_KEY) || "";
@@ -296,6 +349,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
   let view = startOfMonth(new Date());               // 현재 보는 달
   let selected = toKey(new Date());                  // 선택된 날짜
   let statsRange = "all";                            // 통계 범위
+  let currentLinkId = null;                          // 글 연결 모달에서 편집 중인 항목 id
 
   function canEdit(){ return !!token; }
   function normalize(d){
@@ -552,9 +606,22 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
                   '<button class="tm-cat-del" data-delcat="' + cat.id + '" aria-label="카테고리 삭제">✕</button>' +
                 "</span>";
       catItems.forEach(t => {
+        const hasLink = !!(t.link && String(t.link).trim());
+        let linkEl = "";
+        if (canEdit()) {
+          // 관리자: 항상 버튼 표시 → 클릭 시 글 연결 모달
+          linkEl = '<button class="tm-item-link' + (hasLink ? ' tm-has-link' : '') + '" data-link="' + t.id + '"' +
+                   ' aria-label="' + (hasLink ? '연결된 글 수정' : '글 연결') + '"' +
+                   ' title="' + (hasLink ? '연결된 글 수정' : '글 연결') + '">' + LINK_SVG + '</button>';
+        } else if (hasLink) {
+          // 방문자: 링크가 있으면 새 탭으로 이동하는 아이콘
+          linkEl = '<a class="tm-item-link tm-has-link" href="' + esc(t.link) + '" target="_blank" rel="noopener"' +
+                   ' aria-label="연결된 글 보기" title="연결된 글 보기">' + LINK_SVG + '</a>';
+        }
         html += '<div class="tm-item ' + (t.done ? "tm-done" : "") + '" data-id="' + t.id + '">' +
                   '<button class="tm-check" data-toggle="' + t.id + '" aria-label="완료 토글">' + CHECK_SVG + "</button>" +
                   '<span class="tm-text">' + esc(t.text) + "</span>" +
+                  linkEl +
                   '<button class="tm-item-del" data-del="' + t.id + '" aria-label="삭제">✕</button>' +
                 "</div>";
       });
@@ -623,6 +690,68 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
     state.todos[selected] = items.filter(x => x.id !== id);
     if (!state.todos[selected].length) delete state.todos[selected];
     save(); renderLists(); renderCalendar();
+  }
+
+  // ── 할 일 ↔ 블로그 글 연결 ─────────────────────────────────────────────
+  let linkSelectReady = false;
+  function populateLinkSelect() {
+    const sel = document.getElementById("tm-link-select");
+    if (!sel || linkSelectReady) return;
+    const posts = Array.isArray(window.TM_POSTS) ? window.TM_POSTS : [];
+    posts.forEach(p => {
+      if (!p || !p.url) return;
+      const opt = document.createElement("option");
+      opt.value = p.url;
+      opt.textContent = (p.date ? p.date + " · " : "") + (p.title || p.url);
+      sel.appendChild(opt);
+    });
+    linkSelectReady = true;
+  }
+  function findItem(id) {
+    const items = state.todos[selected] || [];
+    return items.find(x => x.id === id) || null;
+  }
+  function openLinkModal(id) {
+    const it = findItem(id);
+    if (!it) return;
+    currentLinkId = id;
+    populateLinkSelect();
+    const target = document.getElementById("tm-link-target");
+    const input  = document.getElementById("tm-link-input");
+    const sel    = document.getElementById("tm-link-select");
+    const openBtn = document.getElementById("tm-link-open");
+    const removeBtn = document.getElementById("tm-link-remove");
+    target.innerHTML = "할 일: <b>" + esc(it.text) + "</b>";
+    const cur = it.link ? String(it.link) : "";
+    input.value = cur;
+    // 드롭다운이 현재 링크와 일치하면 선택 상태로
+    sel.value = "";
+    if (cur) { for (const o of sel.options) { if (o.value === cur) { sel.value = cur; break; } } }
+    openBtn.hidden = !cur;
+    removeBtn.hidden = !cur;
+    document.getElementById("tm-link").hidden = false;
+    input.focus();
+  }
+  function closeLink() { document.getElementById("tm-link").hidden = true; currentLinkId = null; }
+  function saveLink() {
+    if (currentLinkId == null) return;
+    const it = findItem(currentLinkId);
+    if (!it) { closeLink(); return; }
+    const v = document.getElementById("tm-link-input").value.trim();
+    if (v) it.link = v; else delete it.link;
+    save(); renderLists(); renderCalendar(); closeLink();
+    toast(v ? "글이 연결됐어요." : "연결을 해제했어요.");
+  }
+  function removeLink() {
+    if (currentLinkId == null) return;
+    const it = findItem(currentLinkId);
+    if (it) { delete it.link; save(); renderLists(); }
+    closeLink();
+    toast("연결을 해제했어요.");
+  }
+  function openLinkTarget() {
+    const v = document.getElementById("tm-link-input").value.trim();
+    if (v) window.open(v, "_blank", "noopener");
   }
 
   // ── 카테고리 관리 ──────────────────────────────────────────────────────
@@ -756,7 +885,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
 
   // ── 이벤트 위임 ────────────────────────────────────────────────────────
   app.addEventListener("click", e => {
-    const t = e.target.closest("[data-act],[data-key],[data-toggle],[data-del],[data-add],[data-editcat],[data-delcat],[data-range]");
+    const t = e.target.closest("[data-act],[data-key],[data-toggle],[data-del],[data-add],[data-editcat],[data-delcat],[data-range],[data-link]");
     if (!t) return;
 
     if (t.dataset.act) {
@@ -771,6 +900,10 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
       else if (a === "admin") adminToggle();
       else if (a === "close-token") closeToken();
       else if (a === "save-token") saveToken();
+      else if (a === "close-link") closeLink();
+      else if (a === "link-save") saveLink();
+      else if (a === "link-remove") removeLink();
+      else if (a === "link-open") openLinkTarget();
       return;
     }
     if (t.dataset.range) { statsRange = t.dataset.range; setSegActive(); renderStats(); return; }
@@ -781,6 +914,7 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
     if (t.dataset.add)     { if (canEdit()) addItem(t.dataset.add); return; }
     if (t.dataset.editcat) { if (canEdit()) editCategory(t.dataset.editcat); return; }
     if (t.dataset.delcat)  { if (canEdit()) deleteCategory(t.dataset.delcat); return; }
+    if (t.dataset.link)    { if (canEdit()) openLinkModal(t.dataset.link); return; }
   });
 
   // ESC 로 모달 닫기
@@ -788,10 +922,24 @@ description: 하루하루 해낸 것들을 체크하며 쌓아가는 기록.
     if (e.key !== "Escape") return;
     if (!document.getElementById("tm-stats").hidden) closeStats();
     if (!document.getElementById("tm-token").hidden) closeToken();
+    if (!document.getElementById("tm-link").hidden) closeLink();
   });
   // 토큰 입력 Enter 제출
   document.getElementById("tm-token-input").addEventListener("keydown", e => {
     if (e.key === "Enter") { e.preventDefault(); saveToken(); }
+  });
+  // 글 연결: 드롭다운에서 글 선택 시 URL 입력칸 동기화
+  document.getElementById("tm-link-select").addEventListener("change", e => {
+    const v = e.target.value;
+    if (v) {
+      const input = document.getElementById("tm-link-input");
+      input.value = v;
+      document.getElementById("tm-link-open").hidden = false;
+    }
+  });
+  // 글 연결: URL 입력칸 Enter 로 저장
+  document.getElementById("tm-link-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); saveLink(); }
   });
 
   // 달력 셀 키보드 접근
