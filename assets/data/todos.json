@@ -2,27 +2,27 @@
   "categories": [
     {
       "id": "study",
-      "name": "Study",
+      "name": "DESIGN",
       "color": "#2ec4c4"
     },
     {
       "id": "rnd",
-      "name": "dddd",
+      "name": "STORY",
       "color": "#3fbf6f"
     },
     {
       "id": "competition",
-      "name": "Competition",
+      "name": "LANGUAGE",
       "color": "#e0c14b"
     },
     {
       "id": "routine",
-      "name": "Routine",
+      "name": "PORTFOLIO",
       "color": "#e0606b"
     },
     {
       "id": "etc",
-      "name": "etc",
+      "name": "WORK",
       "color": "#9aa0a6"
     }
   ],
