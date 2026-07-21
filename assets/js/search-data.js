@@ -37,6 +37,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
+        },{id: "nav-todo",
+          title: "todo",
+          description: "하루하루 해낸 것들을 체크하며 쌓아가는 기록.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/todo/";
+          },
         },{id: "post-a-post-with-plotly-js",
         
           title: "a post with plotly.js",
