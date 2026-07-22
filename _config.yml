@@ -77,9 +77,9 @@ bing_site_verification:
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: Blog
+blog_name: ENGINE
 blog_description: Thoughts, projects, and narrative designs.
-permalink: /blog/:year/:title/
+permalink: /engine/:year/:title/
 lsi: false
 
 # Pagination
@@ -217,9 +217,9 @@ jekyll-archives:
   posts:
     enabled: [year, tags, categories]
     permalinks:
-      year: "/blog/:year/"
-      tags: "/blog/:type/:name/"
-      categories: "/blog/:type/:name/"
+      year: "/engine/:year/"
+      tags: "/engine/:type/:name/"
+      categories: "/engine/:type/:name/"
   books:
     enabled: [year, tags, categories]
 
