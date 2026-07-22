@@ -1,5 +1,5 @@
 ---
-layout: pinboard
+layout: worldbuilder
 title: about
 permalink: /
 nav: true
