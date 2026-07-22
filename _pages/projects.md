@@ -5,6 +5,7 @@ permalink: /Archive/
 description: A growing collection of your cool projects.
 nav: true
 nav_order: 3
+custom_topbar: true
 display_categories: [work, fun]
 horizontal: false
 ---
