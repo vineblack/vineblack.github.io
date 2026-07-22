@@ -1,10 +1,11 @@
 ---
 layout: page
-permalink: /Lab/
-title: Lab
-description: Welcome to my experimental playground
+permalink: /story-creating/
+title: STORY-CREATING
+description: 창작 시집 · 소설 · 드라마 등 창작 작업
 nav: true
-nav_order: 2
+nav_order: 4
+custom_topbar: true
 ---
 
 <!-- _pages/publications.md -->
