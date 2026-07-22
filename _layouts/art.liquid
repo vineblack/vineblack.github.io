@@ -1,0 +1,211 @@
+---
+layout: default
+---
+
+<div class="post">
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-description">{{ page.description }}</p>
+  </header>
+
+  <article>
+    <!-- 마크다운 파일 상단의 간단한 설명글 출력 영역 -->
+    <div class="art-content">
+      {{ content }}
+    </div>
+
+    <!-- 카테고리 필터 버튼 -->
+    <div class="filter-container">
+      <button class="filter-btn active" onclick="filterGallery('all', event)">All</button>
+      <button class="filter-btn" onclick="filterGallery('3d', event)">3D Modeling</button>
+      <button class="filter-btn" onclick="filterGallery('design', event)">Design</button>
+      <button class="filter-btn" onclick="filterGallery('illustration', event)">Illustration</button>
+    </div>
+
+    <!-- 갤러리 그리드 영역 -->
+    <div class="gallery-grid">
+
+      <!-- 3D Modeling 예시 -->
+      <div class="gallery-item 3d">
+        <div class="image-box">
+          <!-- <img src="{{ '/assets/img/art/3d-1.jpg' | relative_url }}" alt="3D 작업 1"> -->
+          <span class="placeholder-text">3D Image 1</span>
+          
+          <!-- 호버 시 나타나는 오버레이 정보 영역 -->
+          <div class="item-overlay">
+            <div class="item-info">
+              <h3>작업 제목 1</h3>
+              <p>3D Modeling 한 줄 설명입니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-item 3d">
+        <div class="image-box">
+          <span class="placeholder-text">3D Image 2</span>
+          
+          <div class="item-overlay">
+            <div class="item-info">
+              <h3>작업 제목 2</h3>
+              <p>3D Modeling 한 줄 설명입니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design 예시 -->
+      <div class="gallery-item design">
+        <div class="image-box">
+          <span class="placeholder-text">Design Image</span>
+          
+          <div class="item-overlay">
+            <div class="item-info">
+              <h3>사물 Design 제목</h3>
+              <p>사물 Design (Drawing) 한 줄 설명입니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Illustration 예시 -->
+      <div class="gallery-item illustration">
+        <div class="image-box">
+          <span class="placeholder-text">Illustration Image</span>
+          
+          <div class="item-overlay">
+            <div class="item-info">
+              <h3>Illustration 제목</h3>
+              <p>Illustration (컨셉 아트) 한 줄 설명입니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</div>
+
+<!-- 스타일 및 JS -->
+<style>
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 30px 0 40px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 2px solid #32d7a0;
+    color: #32d7a0;
+    padding: 8px 24px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background-color: #32d7a0;
+    color: #121212;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .gallery-item {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1e1e1e;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-4px);
+  }
+
+  .image-box {
+    position: relative; /* 오버레이 절대 위치 지정을 위한 부모 기준 설정 */
+    width: 100%;
+    aspect-ratio: 1 / 1; /* 정사각형 비율 유지 */
+    background-color: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .placeholder-text {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  /* 호버 오버레이 스타일 */
+  .item-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75); /* 어두운 회색 반투명 레이어 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* 평소에는 숨김 */
+    transition: opacity 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* 마우스 오버 시 오버레이 나타남 */
+  .image-box:hover .item-overlay {
+    opacity: 1;
+  }
+
+  .item-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.05rem;
+    color: #ffffff;
+  }
+
+  .item-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #ccc;
+  }
+
+  .gallery-item.hide {
+    display: none;
+  }
+</style>
+
+<script>
+  function filterGallery(category, event) {
+    const items = document.querySelectorAll('.gallery-item');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    buttons.forEach(btn => btn.classList.remove('active'));
+    if (event) event.target.classList.add('active');
+
+    items.forEach(item => {
+      if (category === 'all' || item.classList.contains(category)) {
+        item.classList.remove('hide');
+      } else {
+        item.classList.add('hide');
+      }
+    });
+  }
+</script>

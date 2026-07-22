@@ -21,7 +21,7 @@
     {% include header.liquid %}
 
     <!-- Content -->
-    <div class="container mt-5" role="main">
+    <div class="container-fluid art-page mt-5" role="main">
       {% if page.toc and page.toc.sidebar %}
         {% if page.toc.sidebar == 'right' %}
           <div class="row">
@@ -46,6 +46,16 @@
         {{ content }}
       {% endif %}
     </div>
+
+    <!-- Css추가 했으니 나중에 제거 -->
+    <style>
+    .art-page{
+        width:100%;
+        max-width:1600px;
+        margin:0 auto;
+        padding:0 60px;
+    }
+    </style>
 
     <!-- Footer -->
     {% include footer.liquid %}
