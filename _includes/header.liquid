@@ -19,9 +19,10 @@
       <div class="logo"><b>{{ site.first_name | default: site.title }}</b> {{ site.last_name }}</div>
       <nav class="topnav">
         <a href="{{ '/' | relative_url }}" {% if page.permalink == '/' %}class="active"{% endif %}>About</a>
-        <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog/' %}class="active"{% endif %}>Blog</a>
-        <a href="{{ '/Lab/' | relative_url }}" {% if page.url contains '/Lab/' %}class="active"{% endif %}>Lab</a>
-        <a href="{{ '/Archive/' | relative_url }}" {% if page.url contains '/Archive/' %}class="active"{% endif %}>Archive</a>
+        <a href="{{ '/art/' | relative_url }}" {% if page.url contains '/art/' %}class="active"{% endif %}>Art</a>
+        <a href="{{ '/engine/' | relative_url }}" {% if page.url contains '/engine/' %}class="active"{% endif %}>Engine</a>
+        <a href="{{ '/story-creating/' | relative_url }}" {% if page.url contains '/story-creating/' %}class="active"{% endif %}>Story-Creating</a>
+        <a href="{{ '/research/' | relative_url }}" {% if page.url contains '/research/' %}class="active"{% endif %}>Research</a>
         <a href="{{ '/cv/' | relative_url }}" {% if page.url contains '/cv/' %}class="active"{% endif %}>CV</a>
       </nav>
     </div>
@@ -130,8 +131,8 @@
                   <li class="nav-item {% if page.url contains parent_link %}active{% endif %}">
                     {%- if p.permalink contains '://' -%}
                       {%- assign url = p.permalink -%}
-                    {%- elsif p.permalink contains '/blog/' -%}
-                      {%- assign url = '/blog/' -%}
+                    {%- elsif p.permalink contains '/engine/' -%}
+                      {%- assign url = '/engine/' -%}
                     {%- else -%}
                       {%- assign url = p.url -%}
                     {%- endif %}
