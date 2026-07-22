@@ -15,11 +15,14 @@ custom_topbar: true
 <!-- ✏️ 아래는 예시입니다. 실제 작업 이미지는 assets/img/ 에 올린 뒤 경로만 바꾸세요. -->
 
 ### 3D Modeling
+
 - [작업 제목 1] — [한 줄 설명]
 - [작업 제목 2] — [한 줄 설명]
 
 ### 사물 Design (Drawing)
+
 - [작업 제목] — [한 줄 설명]
 
 ### Illustration
+
 - [작업 제목] — [한 줄 설명]

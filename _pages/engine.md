@@ -97,6 +97,7 @@ pagination:
       </div>
     </div>
     <hr>
+
 {% endif %}
 
   <ul class="post-list">
@@ -119,6 +120,7 @@ pagination:
     {% assign categories = post.categories | join: "" %}
 
     <li>
+
 {% if post.thumbnail %}
 <div class="row">
           <div class="col-sm-9">
