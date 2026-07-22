@@ -71,7 +71,7 @@
   .scroll-tag{position:absolute;bottom:34px;left:5vw;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);}
 
   /* ================================================================
-     PROJECT SECTIONS (글자 UI 오른쪽 이동 조정)
+     PROJECT SECTIONS
      ================================================================ */
   main{padding:0;max-width:none;margin:0;}
 
@@ -83,7 +83,6 @@
   .proj-head .idx{color:var(--amber);}
   .proj-head .k{color:var(--ink-faint);}
 
-  /* 비율을 1fr 1fr로 정돈하고 그리드 gap 설정 */
   .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;}
   .proj.flip .proj-visual{order:2;}
   .proj.flip .proj-copy{order:1;}
@@ -102,7 +101,6 @@
   .tools ul{list-style:none;}
   .tools li{font-size:13px;color:var(--ink-dim);line-height:2.1;}
 
-  /* 오른쪽 글자 영역에 좌측 여백(padding-left)을 추가하여 중앙선에서 살짝 밀어냄 */
   .proj-copy{
     padding-left:3vw;
   }
@@ -138,7 +136,6 @@
     background:radial-gradient(circle at center, rgba(232,179,79,.05), transparent 70%);
   }
 
-  /* 중앙 빛나는 원형 오라 */
   .center-ring-container{
     position:absolute;
     top:45%;
@@ -164,7 +161,6 @@
     border:1px solid rgba(127,216,208,0.3);
   }
 
-  /* 하단 바 */
   .footer-bottom-bar{
     display:flex;
     justify-content:space-between;
@@ -196,7 +192,6 @@
     color:var(--amber);
   }
 
-  /* 소셜 버튼 동그라미 내부 SVG 로고 스타일 */
   .footer-right-info{
     display:flex;
     align-items:center;
@@ -266,9 +261,10 @@
   <div class="logo"><b>Youngeun</b> Lee</div>
   <nav class="topnav">
     <a href="{{ '/' | relative_url }}">About</a>
-    <a href="{{ '/blog/' | relative_url }}">Blog</a>
-    <a href="{{ '/Lab/' | relative_url }}">Lab</a>
-    <a href="{{ '/Archive/' | relative_url }}">Archive</a>
+    <a href="{{ '/art/' | relative_url }}">Art</a>
+    <a href="{{ '/engine/' | relative_url }}">Engine</a>
+    <a href="{{ '/story-creating/' | relative_url }}">Story-Creating</a>
+    <a href="{{ '/research/' | relative_url }}">Research</a>
     <a href="{{ '/cv/' | relative_url }}">CV</a>
   </nav>
 </div>
