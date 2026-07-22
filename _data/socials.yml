@@ -22,7 +22,7 @@ email: # can be any name here other than the ones already defined in the jekyll-
 linkedin: # can be any name here other than the ones already defined in the jekyll-socials plugin
   logo: https://img.icons8.com/fluency-systems-regular/96/linkedin.png # can be png, svg, jpg
   title: linkedin
-  url: 
+  url: https://www.linkedin.com/in/%EC%98%81%EC%9D%80-%EC%9D%B4-2aa9972aa/
 
 Artstation: # can be any name here other than the ones already defined in the jekyll-socials plugin
   logo: https://img.icons8.com/ios-filled/50/artstation.png # can be png, svg, jpg
@@ -32,7 +32,7 @@ Artstation: # can be any name here other than the ones already defined in the je
 github: # can be any name here other than the ones already defined in the jekyll-socials plugin
   logo: https://img.icons8.com/fluency-systems-regular/96/github.png # can be png, svg, jpg
   title: Github
-  url: https://github.com/bigeco
+  url: https://github.com/vineblack
 
 youtube: # can be any name here other than the ones already defined in the jekyll-socials plugin
   logo: https://img.icons8.com/material-rounded/96/youtube-play.png # can be png, svg, jpg

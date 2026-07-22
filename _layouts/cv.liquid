@@ -37,12 +37,12 @@
   html,body{background:var(--bg) !important;color:var(--ink) !important;font-family:'Inter',sans-serif;overflow-x:hidden;}
   a{color:inherit;}
 
-  /* ---- chrome ---- */
-  .topbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:26px 5vw;mix-blend-mode:difference;}
-  .logo{font-family:'Fraunces',serif;font-size:15px;letter-spacing:.02em;}
+  /* ---- chrome (수정된 상단 네비게이션 바) ---- */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:26px 5vw;background:transparent;}
+  .logo{font-family:'Fraunces',serif;font-size:15px;letter-spacing:.02em;color:var(--ink);}
   .logo b{font-weight:600;}
-  .topnav{display:flex;gap:22px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
-  .topnav a{text-decoration:none;color:var(--ink);opacity:.8;}
+  .topnav{display:flex;gap:28px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
+  .topnav a{text-decoration:none;color:var(--ink);opacity:.7;transition:opacity .2s, color .2s;}
   .topnav a:hover,.topnav a.active{opacity:1;color:var(--amber);}
 
   .rail{position:fixed;right:5vw;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:20px;}
@@ -146,13 +146,15 @@
 </head>
 <body>
 
+<!-- ===== TOPBAR (수정됨) ===== -->
 <div class="topbar">
   <div class="logo"><b>Youngeun</b> Lee</div>
   <nav class="topnav">
-    <a href="{{ '/' | relative_url }}">About</a>
-    <a href="{{ '/blog/' | relative_url }}">Blog</a>
-    <a href="{{ '/Lab/' | relative_url }}">Lab</a>
-    <a href="{{ '/Archive/' | relative_url }}">Archive</a>
+    <a href="{{ '/' | relative_url }}">ABOUT</a>
+    <a href="{{ '/art/' | relative_url }}">ART</a>
+    <a href="{{ '/engine/' | relative_url }}">ENGINE</a>
+    <a href="{{ '/story-creating/' | relative_url }}">STORY-CREATING</a>
+    <a href="{{ '/research/' | relative_url }}">RESEARCH</a>
     <a href="{{ '/cv/' | relative_url }}" class="active">CV</a>
   </nav>
 </div>
@@ -250,7 +252,7 @@
     <div class="timeline">
       <div class="tl-item">
         <div class="tl-date">2022.3 - 2028.2 · Anseong, South Korea</div>
-        <div class="tl-role">Art &amp; Technology, Double Major in Creative Writing</a></div>
+        <div class="tl-role">Art &amp; Technology, Double Major in Creative Writing</div>
         <div class="tl-org">Chung-Ang University</div>
         <div class="tl-desc">Bachelor's Degree</div>
       </div>
@@ -280,7 +282,7 @@
   </section>
 
   <!-- ===== LICENSE ===== -->
-  <section class="block">
+  <section class="block" id="license">
     <div class="col-head">LICENSE</div>
     <div class="entry">
       <div class="entry-year">1905</div>
@@ -345,7 +347,7 @@
     });
   });
 
-  var ids = ['top','exp','edu','awards','skills'];
+  var ids = ['top','exp','edu','awards','license','skills'];
   ids.forEach(function(id){
     var el = document.getElementById(id);
     if(!el) return;
