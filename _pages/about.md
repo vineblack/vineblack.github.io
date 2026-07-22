@@ -1,7 +1,9 @@
 ---
-layout: about
+layout: pinboard
 title: about
 permalink: /
+nav: true
+nav_order: 1
 subtitle: Narrative 3D Environment Artist
 
 profile:
