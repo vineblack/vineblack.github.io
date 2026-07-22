@@ -45,7 +45,7 @@
   .rail a.active,.rail a:hover{color:var(--amber);}
   .rail a.active .dot,.rail a:hover .dot{background:var(--amber);box-shadow:0 0 8px var(--amber);}
 
-  /* ---- hero (1번 수정: 행성을 수직 중앙에 정렬 top: 50%) ---- */
+  /* ---- hero ---- */
   .hero{min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 5vw;background:
       radial-gradient(ellipse at 70% 40%, rgba(127,216,208,.08), transparent 55%),
       radial-gradient(ellipse at 20% 70%, rgba(232,179,79,.06), transparent 50%);}
@@ -71,7 +71,7 @@
   .scroll-tag{position:absolute;bottom:34px;left:5vw;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);}
 
   /* ================================================================
-     PROJECT SECTIONS
+     PROJECT SECTIONS (글자 UI 오른쪽 이동 조정)
      ================================================================ */
   main{padding:0;max-width:none;margin:0;}
 
@@ -83,7 +83,8 @@
   .proj-head .idx{color:var(--amber);}
   .proj-head .k{color:var(--ink-faint);}
 
-  .proj-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:6vw;align-items:center;}
+  /* 비율을 1fr 1fr로 정돈하고 그리드 gap 설정 */
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;}
   .proj.flip .proj-visual{order:2;}
   .proj.flip .proj-copy{order:1;}
 
@@ -101,8 +102,17 @@
   .tools ul{list-style:none;}
   .tools li{font-size:13px;color:var(--ink-dim);line-height:2.1;}
 
+  /* 오른쪽 글자 영역에 좌측 여백(padding-left)을 추가하여 중앙선에서 살짝 밀어냄 */
+  .proj-copy{
+    padding-left:3vw;
+  }
+  .proj.flip .proj-copy{
+    padding-left:0;
+    padding-right:3vw;
+  }
+
   .proj-copy h2{font-family:'Fraunces',serif;font-weight:340;line-height:.92;
-    font-size:clamp(40px,5.4vw,86px);letter-spacing:-0.01em;}
+    font-size:clamp(40px,5vw,80px);letter-spacing:-0.01em;}
   .proj-copy .lead{margin-top:26px;max-width:540px;font-size:15px;line-height:1.85;color:var(--ink-dim);}
 
   .chip-group{margin-top:40px;}
@@ -186,7 +196,7 @@
     color:var(--amber);
   }
 
-  /* 2번 수정: 소셜 버튼 동그라미 내부 SVG 로고 스타일 */
+  /* 소셜 버튼 동그라미 내부 SVG 로고 스타일 */
   .footer-right-info{
     display:flex;
     align-items:center;
@@ -244,6 +254,7 @@
     .hero{padding-top:14vh;}
     .proj-grid{grid-template-columns:1fr;gap:40px;}
     .proj.flip .proj-visual,.proj.flip .proj-copy{order:0;}
+    .proj-copy,.proj.flip .proj-copy{padding-left:0;padding-right:0;}
     .footer-bottom-bar{flex-direction:column;align-items:flex-start;gap:24px;}
     .footer-right-info{width:100%;justify-content:space-between;flex-wrap:wrap;}
   }
@@ -275,7 +286,6 @@
   <h1 class="giant">World<br><span class="accent">Builder</span></h1>
   <p class="hero-sub">이야기가 그려지는 게 아니라, 그 안에서 살아지는 공간을 설계합니다. 논리와 서사가 만나는 지점에서 세계를 짓습니다.</p>
 
-  <!-- 행성 수직 중앙 위치 정렬 -->
   <div class="world">
     <div class="glow"></div>
     <div class="ring r1"></div>
@@ -441,7 +451,6 @@
       <p class="footer-copyright">© 2026 Youngeun Lee.</p>
     </div>
 
-    <!-- 2번 수정: GitHub, LinkedIn, Behance, ArtStation SVG 로고 원형 아이콘 -->
     <div class="footer-right-info">
       <div class="social-circles">
         <!-- GitHub -->
@@ -456,7 +465,7 @@
         <a href="#" class="social-btn" title="Behance">
           <svg viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm-1.708 6.021c-.088-.553-.327-1.009-.719-1.368-.391-.359-.92-.538-1.587-.538-.601 0-1.111.164-1.53.493-.419.328-.718.777-.897 1.347-.034.113-.058.193-.073.238h4.839c-.012-.057-.023-.114-.033-.172zm-4.78 2.052c.074.566.309 1.018.705 1.355.396.337.915.506 1.557.506.568 0 1.042-.128 1.422-.384.38-.256.657-.58.831-.972h2.247c-.201.815-.658 1.503-1.371 2.064C20.19 18.203 19.23 18.5 17.973 18.5c-1.488 0-2.693-.432-3.615-1.296-.922-.864-1.383-2.062-1.383-3.594 0-1.46.44-2.646 1.32-3.558.88-.912 2.036-1.368 3.468-1.368 1.482 0 2.628.432 3.438 1.296.81.864 1.215 2.06 1.215 3.588 0 .204-.012.432-.036.684H15.512zm-6.524-7.859c.783 0 1.408.188 1.875.564.467.376.701.889.701 1.539 0 .502-.143.914-.429 1.236-.286.322-.705.541-1.257.657.684.14 1.21.411 1.578.813.368.402.552.937.552 1.605 0 .808-.268 1.455-.804 1.941-.536.486-1.28.729-2.232.729H2V7.214h6.988zm-4.308 3.08h3.912c.42 0 .744-.083.972-.249.228-.166.342-.421.342-.765 0-.324-.114-.567-.342-.729-.228-.162-.552-.243-.972-.243H4.68v2.986zm0 2.213v3.42h4.224c.48 0 .848-.103 1.104-.309.256-.206.384-.51.384-.912 0-.38-.128-.68-.384-.897-.256-.217-.624-.325-1.104-.325H4.68z"/></svg>
         </a>
-        <!-- ArtStation 추가 -->
+        <!-- ArtStation -->
         <a href="#" class="social-btn" title="ArtStation">
           <svg viewBox="0 0 24 24"><path d="M.234 18.27l2.83-4.898h.002l5.066-8.777c.481-.832 1.371-1.345 2.333-1.345h4.116l-7.234 12.532-2.327 4.032c-.378.653-1.077 1.054-1.834 1.054H0l.234-2.598zm12.392-12.872l6.234 10.8-2.617 4.534H4.558l2.617-4.534 5.451-9.44 2.083-3.61c.481-.832 1.371-1.345 2.333-1.345h4.116l-7.234 12.532-.297.513zm11.14 13.916l-2.038 3.532c-.378.653-1.077 1.054-1.834 1.054h-7.904l2.617-4.534h9.124l.035-.052z"/></svg>
         </a>
