@@ -24,18 +24,21 @@ $pink-color: #f92080 !default;
 $pink-color-light: #ffdddd !default;
 $yellow-color: #efcc00 !default;
 
-$grey-color: #828282 !default;
-$grey-color-light: color.adjust($grey-color, $lightness: 40%);
-$grey-color-dark: #1c1c1d;
+$grey-color-light: #eef2f0 !default;              /* 메인 기본 텍스트 색상 */
+$grey-color: rgba(238, 242, 240, 0.6) !default;    /* 서브/설명 텍스트 색상 */
+$grey-color-dark: #0b0f14 !default;             /* 메인 어두운 배경색 */
 $grey-900: #212529;
 
 $white-color: #ffffff !default;
-$black-color: #000000 !default;
+$black-color: #0b0f14 !default;            /* 메인 어두운 배경색 */
+
+$amber-color: #e8b34f !default;            /* 포인트 강조 색상 (Amber) */
+$cyan-color: #7fd8d0 !default;             /* 포인트 호버 색상 (Cyan) */
 
 // Theme colors
 
 $code-bg-color-light: rgba($purple-color, 0.05);
-$code-bg-color-dark: #2c3237 !default;
+$code-bg-color-dark: #121619 !default;     /* 카드 및 코드 박스 배경색 */
 
 // Font awesome location
 $fa-font-path: "../webfonts";
