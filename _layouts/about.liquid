@@ -45,7 +45,7 @@
   .rail a.active,.rail a:hover{color:var(--amber);}
   .rail a.active .dot,.rail a:hover .dot{background:var(--amber);box-shadow:0 0 8px var(--amber);}
 
-  /* ---- hero (행성 위치 수정: top 38%) ---- */
+  /* ---- hero (1번 수정: 행성을 수직 중앙에 정렬 top: 50%) ---- */
   .hero{min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 5vw;background:
       radial-gradient(ellipse at 70% 40%, rgba(127,216,208,.08), transparent 55%),
       radial-gradient(ellipse at 20% 70%, rgba(232,179,79,.06), transparent 50%);}
@@ -55,8 +55,8 @@
   .giant .accent{font-weight:600;color:transparent;-webkit-text-stroke:1px var(--ink);}
   .hero-sub{margin-top:26px;max-width:420px;color:var(--ink-dim);font-size:15px;line-height:1.75;}
 
-  /* 1번 수정사항: 행성이 하단에 잘리지 않도록 위로 이동 (52% -> 38%) */
-  .world{position:absolute;right:5vw;top:38%;transform:translateY(-50%);width:clamp(380px,44vw,640px);height:clamp(380px,44vw,640px);perspective:1200px;}
+  /* 행성 중앙 수직 정렬 */
+  .world{position:absolute;right:5vw;top:50%;transform:translateY(-50%);width:clamp(380px,44vw,640px);height:clamp(380px,44vw,640px);perspective:1200px;}
   .world .glow{position:absolute;left:50%;top:50%;width:60%;height:60%;transform:translate(-50%,-50%);border-radius:50%;
     background:radial-gradient(circle,rgba(127,216,208,.28),rgba(127,216,208,.06) 45%,transparent 70%);filter:blur(6px);pointer-events:none;}
   .world .ring{position:absolute;inset:0;border:1px solid rgba(127,216,208,.42);border-radius:50%;transform-style:preserve-3d;}
@@ -87,7 +87,6 @@
   .proj.flip .proj-visual{order:2;}
   .proj.flip .proj-copy{order:1;}
 
-  /* 2번 수정사항: 이미지를 비워두고 회색 배경 + 이미지 글자만 표시 */
   .frame{position:relative;aspect-ratio:1/1;border-radius:16px;overflow:hidden;
     border:1px solid var(--line);background:#2a323d;
     display:flex;align-items:center;justify-content:center;
@@ -116,7 +115,7 @@
   .chip.solid{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:500;}
   .ph{color:var(--ink-faint);font-style:italic;}
 
-  /* 7번 수정사항: 네 번째 이미지 스타일의 Contact / Footer 디자인 */
+  /* CONTACT / FOOTER */
   .contact-footer-section{
     position:relative;
     min-height:70vh;
@@ -129,7 +128,7 @@
     background:radial-gradient(circle at center, rgba(232,179,79,.05), transparent 70%);
   }
 
-  /* 중앙 빛나는 동그라미 오라 */
+  /* 중앙 빛나는 원형 오라 */
   .center-ring-container{
     position:absolute;
     top:45%;
@@ -155,7 +154,7 @@
     border:1px solid rgba(127,216,208,0.3);
   }
 
-  /* 하단 바 커스텀 */
+  /* 하단 바 */
   .footer-bottom-bar{
     display:flex;
     justify-content:space-between;
@@ -167,7 +166,6 @@
     margin-top:auto;
   }
 
-  /* 왼쪽: 저작권 & 이메일 (Outlook 커넥트) */
   .footer-left-info{
     display:flex;
     flex-direction:column;
@@ -188,7 +186,7 @@
     color:var(--amber);
   }
 
-  /* 오른쪽: 소셜 아이콘 동그라미 & To top */
+  /* 2번 수정: 소셜 버튼 동그라미 내부 SVG 로고 스타일 */
   .footer-right-info{
     display:flex;
     align-items:center;
@@ -199,8 +197,8 @@
     gap:12px;
   }
   .social-btn{
-    width:38px;
-    height:38px;
+    width:42px;
+    height:42px;
     border-radius:50%;
     border:1px solid var(--line);
     display:flex;
@@ -208,15 +206,23 @@
     justify-content:center;
     color:var(--ink-dim);
     text-decoration:none;
-    font-size:11px;
-    letter-spacing:.05em;
-    transition:all .25s;
+    transition:all .25s ease;
+  }
+  .social-btn svg{
+    width:18px;
+    height:18px;
+    fill:currentColor;
+    transition:transform .25s ease;
   }
   .social-btn:hover{
     border-color:var(--amber);
     color:var(--amber);
-    box-shadow:0 0 10px rgba(232,179,79,0.2);
+    box-shadow:0 0 12px rgba(232,179,79,0.25);
   }
+  .social-btn:hover svg{
+    transform:scale(1.1);
+  }
+
   .to-top-btn{
     color:var(--ink-dim);
     text-decoration:none;
@@ -239,7 +245,7 @@
     .proj-grid{grid-template-columns:1fr;gap:40px;}
     .proj.flip .proj-visual,.proj.flip .proj-copy{order:0;}
     .footer-bottom-bar{flex-direction:column;align-items:flex-start;gap:24px;}
-    .footer-right-info{width:100%;justify-content:space-between;}
+    .footer-right-info{width:100%;justify-content:space-between;flex-wrap:wrap;}
   }
 </style>
 </head>
@@ -269,6 +275,7 @@
   <h1 class="giant">World<br><span class="accent">Builder</span></h1>
   <p class="hero-sub">이야기가 그려지는 게 아니라, 그 안에서 살아지는 공간을 설계합니다. 논리와 서사가 만나는 지점에서 세계를 짓습니다.</p>
 
+  <!-- 행성 수직 중앙 위치 정렬 -->
   <div class="world">
     <div class="glow"></div>
     <div class="ring r1"></div>
@@ -291,7 +298,6 @@
     </div>
     <div class="proj-grid">
       <div class="proj-visual">
-        <!-- 회색 배경 + 이미지 글자만 표시 -->
         <div class="frame">
           <span class="frame-text">이미지</span>
           <div class="halo"></div>
@@ -422,32 +428,38 @@
 
 </main>
 
-<!-- CONTACT & FOOTER SECTION (수정사항 3, 4, 5, 6, 7 번 반영) -->
+<!-- CONTACT & FOOTER SECTION -->
 <footer class="contact-footer-section" id="contact">
   
-  <!-- 네 번째 이미지 스타일: 중앙 빛나는 원형 오라 -->
   <div class="center-ring-container">
     <div class="center-ring"></div>
   </div>
 
   <div class="footer-bottom-bar">
-    <!-- 좌측 하단: 이메일 & 저작권 -->
     <div class="footer-left-info">
-      <!-- 7번: 메일 클릭 시 Outlook/기본 메일 연결 -->
       <a href="mailto:llstella674@gmail.com" class="footer-email">llstella674@gmail.com</a>
-      <!-- 6번: 제킬/알폴리오 문구 제거 -->
       <p class="footer-copyright">© 2026 Youngeun Lee.</p>
     </div>
 
-    <!-- 우측 하단: 소셜 아이콘 원형 버튼 & 맨 위로 스크롤 -->
+    <!-- 2번 수정: GitHub, LinkedIn, Behance, ArtStation SVG 로고 원형 아이콘 -->
     <div class="footer-right-info">
       <div class="social-circles">
-        <!-- 3번: 본인 깃허브 레포 주소 연결 -->
-        <a href="https://github.com/vineblack/vineblack.github.io" target="_blank" class="social-btn" title="GitHub">GH</a>
-        <!-- 4번: 지정 링크드인 연결 -->
-        <a href="https://www.linkedin.com/in/%EC%98%81%EC%9D%80-%EC%9D%B4-2aa9972aa/" target="_blank" class="social-btn" title="LinkedIn">IN</a>
-        <!-- 5번: BEHANCE 추가 -->
-        <a href="#" class="social-btn" title="Behance">BE</a>
+        <!-- GitHub -->
+        <a href="https://github.com/vineblack/vineblack.github.io" target="_blank" class="social-btn" title="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/%EC%98%81%EC%9D%80-%EC%9D%B4-2aa9972aa/" target="_blank" class="social-btn" title="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+        </a>
+        <!-- Behance -->
+        <a href="#" class="social-btn" title="Behance">
+          <svg viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm-1.708 6.021c-.088-.553-.327-1.009-.719-1.368-.391-.359-.92-.538-1.587-.538-.601 0-1.111.164-1.53.493-.419.328-.718.777-.897 1.347-.034.113-.058.193-.073.238h4.839c-.012-.057-.023-.114-.033-.172zm-4.78 2.052c.074.566.309 1.018.705 1.355.396.337.915.506 1.557.506.568 0 1.042-.128 1.422-.384.38-.256.657-.58.831-.972h2.247c-.201.815-.658 1.503-1.371 2.064C20.19 18.203 19.23 18.5 17.973 18.5c-1.488 0-2.693-.432-3.615-1.296-.922-.864-1.383-2.062-1.383-3.594 0-1.46.44-2.646 1.32-3.558.88-.912 2.036-1.368 3.468-1.368 1.482 0 2.628.432 3.438 1.296.81.864 1.215 2.06 1.215 3.588 0 .204-.012.432-.036.684H15.512zm-6.524-7.859c.783 0 1.408.188 1.875.564.467.376.701.889.701 1.539 0 .502-.143.914-.429 1.236-.286.322-.705.541-1.257.657.684.14 1.21.411 1.578.813.368.402.552.937.552 1.605 0 .808-.268 1.455-.804 1.941-.536.486-1.28.729-2.232.729H2V7.214h6.988zm-4.308 3.08h3.912c.42 0 .744-.083.972-.249.228-.166.342-.421.342-.765 0-.324-.114-.567-.342-.729-.228-.162-.552-.243-.972-.243H4.68v2.986zm0 2.213v3.42h4.224c.48 0 .848-.103 1.104-.309.256-.206.384-.51.384-.912 0-.38-.128-.68-.384-.897-.256-.217-.624-.325-1.104-.325H4.68z"/></svg>
+        </a>
+        <!-- ArtStation 추가 -->
+        <a href="#" class="social-btn" title="ArtStation">
+          <svg viewBox="0 0 24 24"><path d="M.234 18.27l2.83-4.898h.002l5.066-8.777c.481-.832 1.371-1.345 2.333-1.345h4.116l-7.234 12.532-2.327 4.032c-.378.653-1.077 1.054-1.834 1.054H0l.234-2.598zm12.392-12.872l6.234 10.8-2.617 4.534H4.558l2.617-4.534 5.451-9.44 2.083-3.61c.481-.832 1.371-1.345 2.333-1.345h4.116l-7.234 12.532-.297.513zm11.14 13.916l-2.038 3.532c-.378.653-1.077 1.054-1.834 1.054h-7.904l2.617-4.534h9.124l.035-.052z"/></svg>
+        </a>
       </div>
       
       <a href="#hero" class="to-top-btn">To top ⬆</a>
