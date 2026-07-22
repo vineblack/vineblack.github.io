@@ -1,331 +1,182 @@
 ---
-# CV 전용 독립 레이아웃 — about(worldbuilder)와 같은 어두운 톤
+layout: default
+title: CV
+permalink: /cv/
+nav: true
+nav_order: 5
+cv_pdf: example_pdf.pdf # assets/pdf/ 안에 위치한 PDF 파일명
 ---
-<!DOCTYPE html>
-<html lang="{{ site.lang | default: 'ko' }}">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>{{ page.title | default: site.title }}</title>
 
-<!-- ===== al-folio head 재사용 (SEO·favicon·보안) ===== -->
-{% include metadata.liquid %}
-<meta
-  http-equiv="Content-Security-Policy"
-  content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"
->
-{% if site.icon.size <= 4 %}
-  <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{{ site.icon }}</text></svg>">
-{% elsif site.icon != blank %}
-  <link rel="shortcut icon" href="{{ site.icon | prepend: '/assets/img/' | relative_url | bust_file_cache }}">
-{% endif %}
-<link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+<div class="post">
+  <!-- ===== Header & PDF Download Button ===== -->
+  <header class="post-header">
+    <h1 class="post-title">
+      {{ page.title }}
+      {% if page.cv_pdf %}
+        <a
+          href="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-sm z-depth-1 float-right"
+          style="background-color: var(--global-theme-color); color: var(--global-bg-color); font-weight: 600; border-radius: 20px; padding: 6px 16px;"
+        >
+          <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </a>
+      {% endif %}
+    </h1>
+    <p class="post-description">Curriculum Vitæ · 2026</p>
+  </header>
 
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340,500;9..144,600&family=Caveat:wght@600&family=Inter:wght@400;500;600&display=swap');
+  <article>
+    <div class="cv">
 
-  :root{
-    --bg:#0b0f14;
-    --line:rgba(238,242,240,.1);
-    --ink:#eef2f0;
-    --ink-dim:rgba(238,242,240,.55);
-    --ink-faint:rgba(238,242,240,.32);
-    --amber:#e8b34f;
-    --cyan:#7fd8d0;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{background:var(--bg) !important;color:var(--ink) !important;font-family:'Inter',sans-serif;overflow-x:hidden;}
-  a{color:inherit;}
+      <!-- ===== 1. Contact / General Info ===== -->
+      <div class="card mt-3 p-3">
+        <h3 class="card-title font-weight-medium">General Information</h3>
+        <table class="table table-sm table-borderless font-weight-light">
+          <tr>
+            <th scope="row" style="width: 20%">Full Name</th>
+            <td>Youngeun Lee</td>
+          </tr>
+          <tr>
+            <th scope="row">Title</th>
+            <td>Narrative 3D Environment Artist</td>
+          </tr>
+          <tr>
+            <th scope="row">Location</th>
+            <td>Seoul, South Korea</td>
+          </tr>
+          <tr>
+            <th scope="row">Email</th>
+            <td><a href="mailto:llstella674@gmail.com">llstella674@gmail.com</a></td>
+          </tr>
+        </table>
+      </div>
 
-  /* ---- chrome ---- */
-  .topbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:26px 5vw;mix-blend-mode:difference;}
-  .logo{font-family:'Fraunces',serif;font-size:15px;letter-spacing:.02em;}
-  .logo b{font-weight:600;}
-  .topnav{display:flex;gap:22px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
-  .topnav a{text-decoration:none;color:var(--ink);opacity:.8;}
-  .topnav a:hover,.topnav a.active{opacity:1;color:var(--amber);}
+      <!-- ===== 2. Education ===== -->
+      <div class="card mt-4 p-3">
+        <h3 class="card-title font-weight-medium">Education</h3>
+        <ul class="card-text font-weight-light list-group list-group-flush">
+          <!-- 사용자 본인 학력 -->
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-xs-2 cl-sm-2 col-md-2 text-center" style="width: 120px">
+                <span class="badge font-weight-bold danger-color-dark text-uppercase align-middle" style="min-width: 100px">
+                  2022.3 - 2028.2
+                </span>
+              </div>
+              <div class="col-xs-10 cl-sm-10 col-md-10 mt-2 mt-md-0">
+                <h6 class="title font-weight-bold ml-1 ml-md-4">Bachelor's Degree</h6>
+                <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem; color: var(--global-theme-color);">Chung-Ang University</h6>
+                <p class="ml-1 ml-md-4 font-weight-light" style="font-size: 0.9rem">Art & Technology, Double Major in Creative Writing</p>
+              </div>
+            </div>
+          </li>
+          <!-- 아인슈타인 예시 학력 -->
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-xs-2 cl-sm-2 col-md-2 text-center" style="width: 120px">
+                <span class="badge font-weight-bold danger-color-dark text-uppercase align-middle" style="min-width: 100px">
+                  1896 - 1900
+                </span>
+              </div>
+              <div class="col-xs-10 cl-sm-10 col-md-10 mt-2 mt-md-0">
+                <h6 class="title font-weight-bold ml-1 ml-md-4">Federal teaching diploma</h6>
+                <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem; color: var(--global-theme-color);">Eidgenössische Technische Hochschule</h6>
+                <p class="ml-1 ml-md-4 font-weight-light" style="font-size: 0.9rem">Physics</p>
+                <ul class="ml-1 ml-md-4">
+                  <li>Description 1.</li>
+                  <li>Description 2.</li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
 
-  .rail{position:fixed;right:5vw;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:20px;}
-  .rail a{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;display:flex;align-items:center;gap:10px;transition:color .25s;}
-  .rail a .dot{width:5px;height:5px;border-radius:50%;background:var(--ink-dim);transition:.25s;}
-  .rail a.active,.rail a:hover{color:var(--amber);}
-  .rail a.active .dot,.rail a:hover .dot{background:var(--amber);box-shadow:0 0 8px var(--amber);}
+      <!-- ===== 3. Experience ===== -->
+      <div class="card mt-4 p-3">
+        <h3 class="card-title font-weight-medium">Experience</h3>
+        <ul class="card-text font-weight-light list-group list-group-flush">
+          <!-- 아인슈타인 예시 경력 -->
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-xs-2 cl-sm-2 col-md-2 text-center" style="width: 120px">
+                <span class="badge font-weight-bold danger-color-dark text-uppercase align-middle" style="min-width: 100px">
+                  1933 - 1955
+                </span>
+              </div>
+              <div class="col-xs-10 cl-sm-10 col-md-10 mt-2 mt-md-0">
+                <h6 class="title font-weight-bold ml-1 ml-md-4">Professor of Theoretical Physics</h6>
+                <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem; color: var(--global-theme-color);">Institute for Advanced Study, Princeton University</h6>
+                <p class="ml-1 ml-md-4 font-weight-light" style="font-size: 0.9rem">
+                  Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.
+                </p>
+                <ul class="ml-1 ml-md-4">
+                  <li>Relativity</li>
+                  <li>Description 2.</li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-xs-2 cl-sm-2 col-md-2 text-center" style="width: 120px">
+                <span class="badge font-weight-bold danger-color-dark text-uppercase align-middle" style="min-width: 100px">
+                  1933 - 1933
+                </span>
+              </div>
+              <div class="col-xs-10 cl-sm-10 col-md-10 mt-2 mt-md-0">
+                <h6 class="title font-weight-bold ml-1 ml-md-4">Visiting Professor</h6>
+                <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem; color: var(--global-theme-color);">California Institute of Technology</h6>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
 
-  .doodle{position:absolute;pointer-events:none;opacity:.85;}
-  .signature{font-family:'Caveat',cursive;color:var(--amber);}
+      <!-- ===== 4. Honours and Awards ===== -->
+      <div class="card mt-4 p-3">
+        <h3 class="card-title font-weight-medium">Honours and Awards</h3>
+        <ul class="card-text font-weight-light list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-xs-2 cl-sm-2 col-md-2 text-center" style="width: 120px">
+                <span class="badge font-weight-bold danger-color-dark text-uppercase align-middle" style="min-width: 100px">
+                  1921
+                </span>
+              </div>
+              <div class="col-xs-10 cl-sm-10 col-md-10 mt-2 mt-md-0">
+                <h6 class="title font-weight-bold ml-1 ml-md-4">Nobel Prize in Physics</h6>
+                <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem; color: var(--global-theme-color);">Royal Swedish Academy of Sciences</h6>
+                <p class="ml-1 ml-md-4 font-weight-light" style="font-size: 0.9rem">
+                  The Nobel Prizes are awarded to 'those who conferred the greatest benefit to humankind.'
+                </p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
 
-  /* ---- hero ---- */
-  .cv-hero{position:relative;padding:20vh 5vw 4vh;text-align:center;
-    background:radial-gradient(ellipse at 50% 30%, rgba(127,216,208,.07), transparent 60%);}
-  .cv-hero .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:20px;}
-  .cv-hero .giant{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(72px,16vw,220px);line-height:.86;letter-spacing:-.02em;position:relative;display:inline-block;color:var(--ink);}
-  .pdf-btn{margin-top:30px;display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--ink-dim);text-decoration:none;border:1px solid var(--line);border-radius:40px;padding:11px 22px;transition:.25s;}
-  .pdf-btn:hover{color:var(--amber);border-color:var(--amber);}
+      <!-- ===== 5. Skills & Languages ===== -->
+      <div class="card mt-4 p-3">
+        <h3 class="card-title font-weight-medium">Skills & Languages</h3>
+        <div class="ml-1 ml-md-4">
+          <h6 class="font-weight-bold mt-2">3D & Environment Art</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge badge-pill border p-2 mr-1 mt-1" style="color: var(--global-text-color);">Unreal Engine</span>
+            <span class="badge badge-pill border p-2 mr-1 mt-1" style="color: var(--global-text-color);">Blender</span>
+            <span class="badge badge-pill border p-2 mr-1 mt-1" style="color: var(--global-text-color);">Substance Painter</span>
+          </div>
 
-  /* ---- layout wrap ---- */
-  main{max-width:1000px;margin:0 auto;padding:6vh 5vw 4vh;}
-  .col-head{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:26px;}
-  .ph{color:var(--ink-faint);}
+          <h6 class="font-weight-bold mt-3">Languages</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge badge-pill border p-2 mr-1 mt-1" style="color: var(--global-text-color);">Korean — Native speaker</span>
+            <span class="badge badge-pill border p-2 mr-1 mt-1" style="color: var(--global-text-color);">English — Fluent</span>
+          </div>
+        </div>
+      </div>
 
-  /* ---- intro ---- */
-  .intro{display:flex;gap:48px;align-items:center;flex-wrap:wrap;position:relative;padding-bottom:9vh;border-bottom:1px solid var(--line);}
-  .portrait{width:190px;height:190px;border-radius:50%;flex-shrink:0;
-    background-image:url('{{ "/assets/img/prof_pic.jpg" | relative_url }}');background-size:cover;background-position:center;
-    filter:grayscale(1) contrast(1.05);border:1px solid rgba(127,216,208,.4);box-shadow:0 0 0 6px rgba(127,216,208,.06);}
-  .intro-txt{flex:1;min-width:280px;}
-  .intro-txt .hi{font-family:'Fraunces',serif;font-size:22px;margin-bottom:14px;color:var(--ink);}
-  .intro-txt .summary{font-size:16px;line-height:1.8;color:var(--cyan);font-style:italic;max-width:560px;}
-  .intro .signature{position:absolute;right:6%;bottom:5vh;font-size:34px;transform:rotate(-6deg);}
-
-  /* ---- section shell ---- */
-  section.block{padding:9vh 0;border-bottom:1px solid var(--line);}
-  .two{display:grid;grid-template-columns:280px 1fr;gap:56px;}
-
-  /* ---- contact ---- */
-  .contact-list{display:flex;flex-direction:column;gap:16px;}
-  .contact-list .item{font-size:14px;color:var(--ink-dim);}
-  .contact-list .item b{display:block;color:var(--ink-faint);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;font-weight:500;}
-  .contact-list a{color:var(--ink-dim);text-decoration:none;border-bottom:1px solid var(--line);}
-  .contact-list a:hover{color:var(--amber);border-color:var(--amber);}
-
-  /* ---- timeline (experience / education) ---- */
-  .timeline{position:relative;padding-left:26px;}
-  .timeline::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1px;background:var(--line);}
-  .tl-item{position:relative;padding:0 0 34px;}
-  .tl-item:last-child{padding-bottom:0;}
-  .tl-item::before{content:"";position:absolute;left:-26px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:1px solid var(--amber);}
-  .tl-date{font-size:11px;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:6px;}
-  .tl-role{font-family:'Fraunces',serif;font-size:18px;margin-bottom:3px;color:var(--ink);}
-  .tl-org{font-size:13px;color:var(--cyan);margin-bottom:8px;}
-  .tl-desc{font-size:13px;color:var(--ink-dim);line-height:1.65;margin-bottom:8px;max-width:600px;}
-  .tl-item ul{list-style:none;}
-  .tl-item li{font-size:13px;color:var(--ink-dim);line-height:1.6;padding-left:14px;position:relative;margin-bottom:4px;}
-  .tl-item li::before{content:"–";position:absolute;left:0;color:var(--ink-faint);}
-
-  /* ---- entry stack ---- */
-  .entry{padding:22px 0;border-top:1px solid var(--line);}
-  section.block .entry:last-child{border-bottom:1px solid var(--line);}
-  .entry-year{font-size:11px;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:5px;}
-  .entry-title{font-family:'Fraunces',serif;font-size:17px;margin-bottom:2px;color:var(--ink);}
-  .entry-title a{border-bottom:1px solid var(--line);text-decoration:none;}
-  .entry-title a:hover{color:var(--amber);border-color:var(--amber);}
-  .entry-org{font-size:13px;color:var(--cyan);margin-bottom:8px;}
-  .entry-desc{font-size:13px;color:var(--ink-dim);line-height:1.65;max-width:640px;}
-  .entry ul{list-style:none;margin-top:8px;}
-  .entry li{font-size:13px;color:var(--ink-dim);padding-left:14px;position:relative;margin-bottom:4px;}
-  .entry li::before{content:"–";position:absolute;left:0;color:var(--ink-faint);}
-
-  /* ---- chips ---- */
-  .skill-group{margin-bottom:26px;}
-  .skill-group:last-child{margin-bottom:0;}
-  .skill-group h4{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 12px;font-weight:500;}
-  .chips{display:flex;flex-wrap:wrap;gap:10px;}
-  .chip{font-size:12.5px;color:var(--ink-dim);border:1px solid var(--line);border-radius:40px;padding:8px 15px;transition:.25s;}
-  .chip:hover{color:var(--amber);border-color:var(--amber);}
-
-  /* ---- closing ---- */
-  .closing{position:relative;text-align:center;padding:16vh 5vw 6vh;}
-  .closing .big{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(40px,8vw,104px);line-height:.95;letter-spacing:-.01em;color:var(--ink);}
-  .closing .scatter{margin-top:22px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;}
-  .closing .scatter span{font-family:'Caveat',cursive;font-size:22px;color:var(--cyan);opacity:.75;}
-  .closing .scatter span:nth-child(2n){color:var(--amber);transform:rotate(-4deg);}
-
-  footer{max-width:1000px;margin:0 auto;padding:2vh 5vw 7vh;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;border-top:1px solid var(--line);}
-  footer p{color:var(--ink-faint);font-size:12px;}
-  footer .socials{display:flex;gap:16px;font-size:12px;}
-  footer a{color:var(--ink-dim);text-decoration:none;}
-  footer a:hover{color:var(--amber);}
-
-  @media (max-width:860px){
-    .rail{display:none;} .topnav{display:none;}
-    .two{grid-template-columns:1fr;gap:40px;}
-    .intro .signature{position:static;display:inline-block;margin-top:14px;}
-  }
-</style>
-</head>
-<body>
-
-<div class="topbar">
-  <div class="logo"><b>Youngeun</b> Lee</div>
-  <nav class="topnav">
-    <a href="{{ '/' | relative_url }}">About</a>
-    <a href="{{ '/blog/' | relative_url }}">Blog</a>
-    <a href="{{ '/Lab/' | relative_url }}">Lab</a>
-    <a href="{{ '/Archive/' | relative_url }}">Archive</a>
-    <a href="{{ '/cv/' | relative_url }}" class="active">CV</a>
-  </nav>
+    </div>
+  </article>
 </div>
-
-<nav class="rail">
-  <a href="#top" class="active"><span class="dot"></span>Intro</a>
-  <a href="#exp"><span class="dot"></span>Experience</a>
-  <a href="#edu"><span class="dot"></span>Education</a>
-  <a href="#awards"><span class="dot"></span>Awards</a>
-  <a href="#skills"><span class="dot"></span>Skills</a>
-</nav>
-
-<!-- ===== HERO ===== -->
-<section class="cv-hero" id="top">
-  <div class="eyebrow">Curriculum Vitæ · 2026</div>
-  <h1 class="giant">Portfolio
-    <svg class="doodle" style="top:-6%;left:-4%;width:38px" viewBox="0 0 24 24"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z" fill="var(--cyan)"/></svg>
-    <svg class="doodle" style="top:-12%;right:2%;width:30px" viewBox="0 0 24 24"><path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" fill="var(--amber)"/></svg>
-    <svg class="doodle" style="bottom:2%;right:-3%;width:26px" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="var(--cyan)"/><circle cx="15" cy="10" r="1" fill="var(--cyan)"/><path d="M8.5 14c1.5 1.6 5.5 1.6 7 0" stroke-linecap="round"/></svg>
-  </h1>
-  <br>
-  <a class="pdf-btn" href="{{ '/assets/pdf/example_pdf.pdf' | relative_url }}">↓ Download PDF</a>
-</section>
-
-<main>
-
-  <!-- ===== INTRO / SUMMARY ===== -->
-  <section class="intro">
-    <div class="portrait"></div>
-    <div class="intro-txt">
-      <div class="hi">Hi, I'm Youngeun Lee.</div>
-      <p class="summary">“Designing plausible futures rooted in the dust of reality”</p>
-    </div>
-    <span class="signature">Youngeun</span>
-  </section>
-
-  <!-- ===== CONTACT + EXPERIENCE ===== -->
-  <section class="block two" id="exp">
-    <div>
-      <div class="col-head">Contact</div>
-      <div class="contact-list">
-        <div class="item"><b>Name</b>Youngeun Lee</div>
-        <div class="item"><b>Professional Title</b>Narrative 3D Environment Artist</div>
-        <div class="item"><b>Email</b><a href="mailto:llstella674@gmail.com">llstella674@gmail.com</a></div>
-        <div class="item"><b>Location</b>Seoul, South Korea</div>
-      </div>
-    </div>
-
-    <div>
-      <div class="col-head">Experience</div>
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-date">1933 - 1955 · Princeton University, NJ</div>
-          <div class="tl-role">Professor of Theoretical Physics</div>
-          <div class="tl-org">Institute for Advanced Study, Princeton University</div>
-          <div class="tl-desc">Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.</div>
-          <ul>
-            <li>Relativity</li>
-            <li>Description 2.</li>
-          </ul>
-        </div>
-        <div class="tl-item">
-          <div class="tl-date">1933 - 1933 · Pasadena, California, US</div>
-          <div class="tl-role">Visiting Professor</div>
-          <div class="tl-org">California Institute of Technology</div>
-          <ul>
-            <li>Description 1.</li>
-            <li>Description 2.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== EDUCATION ===== -->
-  <section class="block" id="edu">
-    <div class="col-head">Education</div>
-    <div class="timeline">
-      <div class="tl-item">
-        <div class="tl-date">2022.3 - 2028.2 · Anseong, South Korea</div>
-        <div class="tl-role"><a href="https://www.cau.ac.kr" style="border-bottom:1px solid var(--line);text-decoration:none;">Bachelor's Degree</a></div>
-        <div class="tl-org">Chung-Ang University</div>
-        <div class="tl-desc">Art &amp; Technology, Double Major in Creative Writing</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== AWARDS ===== -->
-  <section class="block" id="awards">
-    <div class="col-head">Awards</div>
-    <div class="entry">
-      <div class="entry-year">1921</div>
-      <div class="entry-title"><a href="https://www.nobelprize.org">Nobel Prize in Physics</a></div>
-      <div class="entry-org">Royal Swedish Academy of Sciences</div>
-      <div class="entry-desc">The Nobel Prizes are awarded to 'those who conferred the greatest benefit to humankind.'</div>
-    </div>
-  </section>
-
-  <!-- ===== SKILLS & LANGUAGES ===== -->
-  <section class="block" id="skills">
-    <div class="col-head">Skills &amp; Languages</div>
-    <div class="skill-group">
-      <h4>3D &amp; Design</h4>
-      <div class="chips">
-        <span class="chip">Unreal Engine</span>
-        <span class="chip">Blender</span>
-        <span class="chip">Substance Painter</span>
-        <span class="chip">Environment Art</span>
-      </div>
-    </div>
-    <div class="skill-group">
-      <h4>Languages</h4>
-      <div class="chips">
-        <span class="chip">Korean — Native speaker</span>
-        <span class="chip">English — Fluent</span>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- ===== CLOSING ===== -->
-<section class="closing">
-  <div class="big">World Building</div>
-  <div class="scatter">
-    <span>environment</span><span>narrative</span><span>3d</span><span>logic</span><span>archive</span><span>worldsystem</span>
-  </div>
-  <svg class="doodle" style="top:12%;left:12%;width:34px" viewBox="0 0 24 24"><path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" fill="var(--amber)"/></svg>
-  <svg class="doodle" style="top:20%;right:14%;width:28px" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="var(--cyan)"/><circle cx="15" cy="10" r="1" fill="var(--cyan)"/><path d="M8.5 14c1.5 1.6 5.5 1.6 7 0" stroke-linecap="round"/></svg>
-</section>
-
-<footer>
-  <p>© 2026 Youngeun Lee. Powered by Jekyll with al-folio theme. Hosted by GitHub Pages.</p>
-  <div class="socials">
-    <a href="https://github.com/bigeco">GitHub</a>
-    <a href="{{ '/' | relative_url }}">About</a>
-  </div>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script>
-  gsap.registerPlugin(ScrollTrigger);
-
-  gsap.from('.cv-hero .eyebrow, .cv-hero .giant, .cv-hero .pdf-btn', {
-    y: 22, opacity: 0, stagger: .1, duration: .8, ease: 'power2.out'
-  });
-
-  gsap.utils.toArray('.intro, section.block, .closing').forEach(function(sec){
-    gsap.from(sec.querySelectorAll('.portrait, .intro-txt, .col-head, .contact-list .item, .tl-item, .entry, .skill-group, .big, .scatter'), {
-      y: 18, opacity: 0, duration: .7, stagger: .04, ease: 'power2.out',
-      scrollTrigger: { trigger: sec, start: 'top 85%' }
-    });
-  });
-
-  gsap.utils.toArray('.doodle').forEach(function(d, i){
-    gsap.to(d, { y: (i % 2 ? 8 : -8), rotation: (i % 2 ? 10 : -8), duration: 3 + i*0.4, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-  });
-
-  var ids = ['top','exp','edu','awards','skills'];
-  ids.forEach(function(id){
-    var el = document.getElementById(id);
-    if(!el) return;
-    ScrollTrigger.create({
-      trigger: el, start: 'top center', end: 'bottom center',
-      onToggle: function(self){
-        if(!self.isActive) return;
-        document.querySelectorAll('.rail a').forEach(function(a){ a.classList.remove('active'); });
-        var link = document.querySelector('.rail a[href="#' + id + '"]');
-        if(link) link.classList.add('active');
-      }
-    });
-  });
-</script>
-</body>
-</html>
