@@ -1,146 +1,86 @@
 /*******************************************************************************
- * Navigation bar and header customization (WorldBuilder Style)
+ * Navigation bar and header customization (WorldBuilder Style - Strict Override)
  ******************************************************************************/
 
 @use "variables" as v;
 
-/* 네비게이션 바 전체 레이아웃 및 어두운 배경 고정 */
-.navbar {
-  box-shadow: none;
-  border-bottom: 1px solid var(--global-divider-color);
-  background-color: var(--global-bg-color) !important;
-  padding: 1.2rem 5vw; /* About 페이지와 비슷한 여백 */
+/* 1. 상단바 전체 배경 및 여백 설정 */
+nav.navbar, 
+header nav.navbar {
+  box-shadow: none !important;
+  border-bottom: none !important; /* 구분선 제거 */
+  background-color: var(--global-bg-color, #0b0f14) !important;
+  padding: 26px 5vw !important; /* 이미지와 동일한 넉넉한 상하 여백 */
+  opacity: 1 !important;
 }
 
-.navbar.navbar-light {
-  a {
-    &:hover {
-      text-decoration: none;
-    }
-  }
+/* 2. 좌측 로고 (Youngeun Lee) */
+.navbar .navbar-brand,
+header .navbar-brand {
+  font-family: 'Fraunces', serif !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  color: var(--global-text-color, #eef2f0) !important;
+  padding: 0 !important;
+  margin: 0 !important;
 
-  /* 1. 좌측 로고 (Youngeun Lee) */
-  .navbar-brand {
-    font-family: 'Fraunces', serif !important;
-    font-size: 15px !important;
+  b, strong {
     font-weight: 600 !important;
-    letter-spacing: 0.02em !important;
-    color: var(--global-text-color) !important;
-  }
-
-  /* 2. 우측 메뉴 목록 (ABOUT, BLOG, LAB, ARCHIVE, CV) */
-  .navbar-nav {
-    display: flex;
-    gap: 1.5rem; /* 메뉴 아이템 간격 */
-    align-items: center;
-
-    .nav-item .nav-link {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 12px !important;
-      font-weight: 600 !important;
-      letter-spacing: 0.12em !important;
-      text-transform: uppercase !important; /* 소문자를 대문자로 변환 */
-      color: var(--global-text-color) !important;
-      opacity: 0.8;
-      transition: all 0.2s ease-in-out;
-
-      &:hover {
-        color: var(--global-hover-color) !important; /* Cyan 컬러 */
-        opacity: 1;
-      }
-    }
-
-    /* 현재 활성화된 페이지 링크 (Active State) */
-    .nav-item.active > .nav-link {
-      background-color: inherit;
-      font-weight: 600;
-      color: var(--global-theme-color) !important; /* Amber 컬러 */
-      opacity: 1;
-
-      &:hover {
-        color: var(--global-hover-color) !important;
-      }
-    }
-  }
-
-  /* 소셜 아이콘이 네비게이션에 포함될 경우 */
-  .navbar-brand.social {
-    padding-bottom: 0;
-    padding-top: 0;
-    font-size: 1.5rem;
-
-    a {
-      i::before {
-        color: var(--global-text-color);
-        transition-property: all 0.2s ease-in-out;
-      }
-
-      &:hover {
-        i::before {
-          color: var(--global-theme-color);
-        }
-      }
-    }
   }
 }
 
-/* 드롭다운 메뉴 스타일 (필요 시) */
-.navbar .dropdown-menu,
-.btn-group.dropdown .dropdown-menu {
-  background-color: var(--global-code-bg-color);
-  border: 1px solid var(--global-divider-color);
+/* 3. 우측 메뉴 컨테이너 위치 정렬 */
+.navbar .navbar-collapse,
+header .navbar-collapse {
+  display: flex !important;
+  justify-content: flex-end !important;
+}
 
-  a:not(.active) {
-    color: var(--global-text-color);
-  }
+.navbar .navbar-nav,
+header .navbar-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 24px !important; /* ABOUT BLOG LAB ARCHIVE CV 사이 간격 */
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
-  a:hover {
-    color: var(--global-hover-color);
-    background-color: var(--global-bg-color);
-  }
+/* 4. 우측 메뉴 텍스트 (ABOUT, BLOG, LAB, ARCHIVE, CV) */
+.navbar .navbar-nav .nav-item .nav-link,
+header .navbar-nav .nav-item .nav-link {
+  font-family: 'Inter', -apple-system, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important; /* 무조건 대문자로 출력 */
+  color: var(--global-text-color, #eef2f0) !important;
+  opacity: 0.8 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: all 0.2s ease-in-out !important;
 
-  .dropdown-divider {
-    border-top: 1px solid var(--global-divider-color) !important;
+  &:hover {
+    color: var(--global-hover-color, #7fd8d0) !important; /* Hover 시 Cyan */
+    opacity: 1 !important;
   }
 }
 
-/* 모바일 토글 버튼 (햄버거 메뉴) */
+/* 5. 현재 활성화된(선택된) 페이지 메뉴 (예: CV - Amber 색상) */
+.navbar .navbar-nav .nav-item.active .nav-link,
+header .navbar-nav .nav-item.active .nav-link {
+  color: var(--global-theme-color, #e8b34f) !important; /* 활성화 시 Amber/Gold */
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+
+/* 6. 모바일 메뉴 토글 버튼 정리 */
 .navbar-toggler {
+  border: none !important;
+  padding: 0 !important;
+  
   .icon-bar {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background-color: var(--global-text-color);
-    border-radius: 1px;
-    margin-bottom: 4px;
-    transition: all 0.2s;
-  }
-
-  .top-bar {
-    transform: rotate(45deg);
-    transform-origin: 10% 10%;
-  }
-
-  .middle-bar {
-    opacity: 0;
-  }
-
-  .bottom-bar {
-    transform: rotate(-45deg);
-    transform-origin: 10% 90%;
-  }
-}
-
-.navbar-toggler.collapsed {
-  .top-bar {
-    transform: rotate(0);
-  }
-
-  .middle-bar {
-    opacity: 1;
-  }
-
-  .bottom-bar {
-    transform: rotate(0);
+    background-color: var(--global-text-color, #eef2f0) !important;
   }
 }
