@@ -1,6 +1,36 @@
 <header>
+  {% if page.custom_topbar %}
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+      .custom-topbar {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 1030;
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 44px 6vw 26px; mix-blend-mode: difference; font-family: 'Inter', sans-serif;
+      }
+      .custom-topbar .logo { font-family: 'Fraunces', serif; font-size: 15px; letter-spacing: .02em; color: #eef2f0; }
+      .custom-topbar .logo b { font-weight: 600; }
+      .custom-topbar .topnav { display: flex; gap: 22px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+      .custom-topbar .topnav a { text-decoration: none; color: #eef2f0; opacity: .8; }
+      .custom-topbar .topnav a:hover, .custom-topbar .topnav a.active { opacity: 1; }
+      body.has-custom-topbar .container.mt-5 { padding-top: 70px; }
+      @media (max-width: 820px) { .custom-topbar .topnav { display: none; } }
+    </style>
+    <div class="custom-topbar">
+      <div class="logo"><b>{{ site.first_name | default: site.title }}</b> {{ site.last_name }}</div>
+      <nav class="topnav">
+        <a href="{{ '/' | relative_url }}" {% if page.permalink == '/' %}class="active"{% endif %}>About</a>
+        <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog/' %}class="active"{% endif %}>Blog</a>
+        <a href="{{ '/Lab/' | relative_url }}" {% if page.url contains '/Lab/' %}class="active"{% endif %}>Lab</a>
+        <a href="{{ '/Archive/' | relative_url }}" {% if page.url contains '/Archive/' %}class="active"{% endif %}>Archive</a>
+        <a href="{{ '/cv/' | relative_url }}" {% if page.url contains '/cv/' %}class="active"{% endif %}>CV</a>
+      </nav>
+    </div>
+  {% else %}
   <!-- Nav Bar -->
-  <nav id="navbar" class="navbar navbar-light navbar-expand-sm {% if site.navbar_fixed %}fixed-top{% else %}sticky-top{% endif %}" role="navigation">
+  <nav id="navbar" class="navbar navbar-light navbar-expand-sm ...">
+    (... 기존 코드 그대로 ...)
+  </nav>
+  {% endif %}
     <div class="container">
       {% if page.permalink != '/' %}
         <a class="navbar-brand title font-weight-lighter" href="{{ site.baseurl }}/">
