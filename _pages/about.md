@@ -1,5 +1,5 @@
 ---
-layout: worldbuilder
+layout: about
 title: about
 permalink: /
 nav: true
