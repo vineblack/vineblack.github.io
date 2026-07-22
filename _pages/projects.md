@@ -1,10 +1,10 @@
 ---
 layout: page
-title: Archive
-permalink: /Archive/
-description: A growing collection of your cool projects.
+title: RESEARCH
+permalink: /research/
+description: 전시/작품 역기획서 · 세계관 리서치
 nav: true
-nav_order: 3
+nav_order: 5
 custom_topbar: true
 display_categories: [work, fun]
 horizontal: false
