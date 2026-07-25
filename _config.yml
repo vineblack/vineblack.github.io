@@ -78,7 +78,7 @@ bing_site_verification:
 # -----------------------------------------------------------------------------
 
 blog_name: ENGINE
-blog_description: Exploring 3D graphics, game engines, and interactive hardware experiments.
+blog_description: Exploring 3D graphics, game engines, and interactive hardware experiments ㅡ a working log of studies, builds, and things that broke along the way.
 permalink: /engine/:year/:title/
 lsi: false
 
