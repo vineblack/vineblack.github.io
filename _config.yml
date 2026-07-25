@@ -78,7 +78,7 @@ bing_site_verification:
 # -----------------------------------------------------------------------------
 
 blog_name: ENGINE
-blog_description: Thoughts, projects, and narrative designs.
+blog_description: Exploring 3D graphics, game engines, and interactive hardware experiments.
 permalink: /engine/:year/:title/
 lsi: false
 
@@ -223,8 +223,8 @@ jekyll-archives:
   books:
     enabled: [year, tags, categories]
 
-display_tags: ["formatting", "images", "links", "math", "code", "blockquotes"]
-display_categories: ["external-services"]
+display_categories: ["Software & Engines", "Technique & Study", "Hardware & Interactive"]
+display_tags: ["unreal", "unity", "maya", "zbrush", "substance-painter", "lighting-study", "material", "arduino", "sensor", "vr-device"]
 
 # -----------------------------------------------------------------------------
 # Jekyll Link Attributes

@@ -37,3 +37,52 @@
 @use "font-awesome/brands";
 @use "font-awesome/solid";
 @use "font-awesome/regular";
+
+
+/* ==========================================================
+   ENGINE 페이지 Custom CSS (ART 스타일 민트색 적용)
+   ========================================================== */
+
+/* 1. ENGINE 타이틀 (World Builder 세리프 폰트 & 좌측 정렬) */
+.engine-header-title {
+  text-align: left !important;
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
+  font-size: 3.2rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+/* 2. 민트색 동그란 태그 버튼 */
+.engine-tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 35px 0 40px 0;
+}
+
+.engine-tag-btn {
+  background-color: transparent;
+  color: #34D399; /* ART 페이지의 에메랄드/민트 컬러 */
+  border: 2px solid #34D399;
+  border-radius: 25px; /* 동그란 필 모양 */
+  padding: 6px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.engine-tag-btn:hover,
+.engine-tag-btn.active {
+  background-color: #34D399;
+  color: #0d1117; /* 활성화 시 글자색 */
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.3);
+}
+
+/* 3. 포스트 카드 왼쪽 여백(Padding) 보정 */
+.post-list > li {
+  padding: 15px 0;
+}
