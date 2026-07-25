@@ -32,13 +32,6 @@
   a{color:inherit;}
 
   /* ---- chrome ---- */
-  .topbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:44px 6vw 26px;mix-blend-mode:difference;}
-  .logo{font-family:'Fraunces',serif;font-size:15px;letter-spacing:.02em;}
-  .logo b{font-weight:600;}
-  .topnav{display:flex;gap:22px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
-  .topnav a{text-decoration:none;color:var(--ink);opacity:.8;}
-  .topnav a:hover{opacity:1;}
-
   .rail{position:fixed;right:5vw;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:22px;}
   .rail a{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;display:flex;align-items:center;gap:10px;transition:color .25s;}
   .rail a .dot{width:5px;height:5px;border-radius:50%;background:var(--ink-dim);transition:background .25s,box-shadow .25s;}
@@ -242,6 +235,8 @@
     color:var(--amber);
   }
 
+  #progress { display: none; }
+
   @media (max-width:900px){
     .rail{display:none;}
     .topnav{display:none;}
@@ -257,17 +252,7 @@
 </head>
 <body>
 
-<div class="topbar">
-  <div class="logo"><b>Youngeun</b> Lee</div>
-  <nav class="topnav">
-    <a href="{{ '/' | relative_url }}">About</a>
-    <a href="{{ '/art/' | relative_url }}">Art</a>
-    <a href="{{ '/engine/' | relative_url }}">Engine</a>
-    <a href="{{ '/story-creating/' | relative_url }}">Story-Creating</a>
-    <a href="{{ '/research/' | relative_url }}">Research</a>
-    <a href="{{ '/cv/' | relative_url }}">CV</a>
-  </nav>
-</div>
+{% include header.liquid %}
 
 <nav class="rail">
   <a href="#hero" class="active"><span class="dot"></span>About</a>
