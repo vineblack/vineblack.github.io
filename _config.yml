@@ -124,6 +124,9 @@ collections:
     output: true
   teachings:
     output: true
+  stories:                          # ← 추가
+    output: true
+    permalink: /story-creating/:name/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

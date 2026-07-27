@@ -1,0 +1,43 @@
+---
+layout: default
+---
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Nanum+Myeongjo:wght@400;700&display=swap');
+
+body{ background: radial-gradient(120% 90% at 50% 0%, #36444f 0%, #1a212b 62%), #141a22 !important; }
+
+.story-reader{ max-width:720px; margin:0 auto; padding:16px 0 110px; }
+.story-back{ display:inline-block; font-family:"Special Elite",monospace; font-size:12px; letter-spacing:.14em; color:#cdb387; text-decoration:none; opacity:.85; }
+.story-back:hover{ opacity:1; color:#e6d3aa; }
+
+.story-sheet{ position:relative; background:#f3ecdb; color:#241f18; border-radius:4px; margin-top:22px;
+  padding:54px clamp(28px,6vw,64px); box-shadow:0 22px 55px -22px rgba(0,0,0,.65); }
+.story-sheet::before{ content:""; position:absolute; inset:0; border-radius:4px; pointer-events:none; opacity:.45;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"); }
+.story-sheet > *{ position:relative; }
+
+.story-stamp{ position:absolute; top:26px; right:26px; font-family:"Special Elite",monospace; color:#b2372a;
+  border:2.5px solid #b2372a; border-radius:5px; padding:5px 12px; font-size:12px; letter-spacing:.14em; transform:rotate(-8deg); opacity:.8; }
+.story-eyebrow{ font-family:"Special Elite",monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#b2372a; }
+.story-title{ font-family:"IBM Plex Sans KR",sans-serif; font-weight:700; font-size:clamp(28px,5vw,42px); line-height:1.25; margin:12px 0 0; color:#241f18; }
+.story-meta{ font-family:"Special Elite",monospace; font-size:11px; letter-spacing:.1em; color:#6a5f4d; margin-top:14px; border-bottom:1px dashed #c3b795; padding-bottom:20px; }
+
+.story-body{ font-family:"Nanum Myeongjo",serif; font-size:17px; line-height:2; color:#2c2620; margin-top:28px; }
+.story-body p{ margin:0 0 1.25em; }
+.story-body h2, .story-body h3{ font-family:"IBM Plex Sans KR",sans-serif; color:#241f18; margin-top:1.6em; }
+.story-body blockquote{ border-left:3px solid #b2372a; margin:1.4em 0; padding:.2em 0 .2em 1em; color:#4a4436; }
+.story-body a{ color:#a5392c; }
+</style>
+
+<div class="story-reader">
+  <a class="story-back" href="{{ '/story-creating/' | relative_url }}">← BACK TO FILES</a>
+  <div class="story-sheet">
+    {% if page.stamp %}<div class="story-stamp">{{ page.stamp }}</div>{% endif %}
+    <div class="story-eyebrow">{{ page.genre }}</div>
+    <h1 class="story-title">{{ page.title }}</h1>
+    <div class="story-meta">{% if page.year %}{{ page.year }}{% endif %}{% if page.file %} · {{ page.file }}{% endif %}</div>
+    <article class="story-body">
+      {{ content }}
+    </article>
+  </div>
+</div>
