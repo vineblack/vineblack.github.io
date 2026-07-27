@@ -32,7 +32,7 @@ ninja.data = [{
           },
         },{id: "nav-story-creating",
           title: "STORY-CREATING",
-          description: "창작 시집 · 소설 · 드라마 등 창작 작업",
+          description: "",
           section: "Navigation",
           handler: () => {
             window.location.href = "/story-creating/";
@@ -73,18 +73,7 @@ ninja.data = [{
             window.open("https://medium.com/@al-folio/displaying-external-posts-on-your-al-folio-blog-b60a1d241a0a?source=rss-17feae71c3c4------2", "_blank");
           
         },
-      },{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
-          description: "",
-          section: "News",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
-          description: "",
-          section: "News",handler: () => {
-              window.location.href = "/news/announcement_2/";
-            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
-          title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
-          description: "",
-          section: "News",},{id: "projects-project-1",
+      },{id: "projects-project-1",
           title: 'project 1',
           description: "with background image",
           section: "Projects",handler: () => {
@@ -129,6 +118,26 @@ ninja.data = [{
           description: "another project with an image 🎉",
           section: "Projects",handler: () => {
               window.location.href = "/projects/9_project/";
+            },},{id: "stories-제목",
+          title: '「제목」',
+          description: "",
+          section: "Stories",handler: () => {
+              window.location.href = "/story-creating/0001-poem/";
+            },},{id: "stories-제목",
+          title: '제목',
+          description: "",
+          section: "Stories",handler: () => {
+              window.location.href = "/story-creating/0002-fiction/";
+            },},{id: "stories-제목",
+          title: '제목',
+          description: "",
+          section: "Stories",handler: () => {
+              window.location.href = "/story-creating/0003-drama/";
+            },},{id: "stories-제목",
+          title: '제목',
+          description: "",
+          section: "Stories",handler: () => {
+              window.location.href = "/story-creating/0004-essay/";
             },},{id: "teachings-data-science-fundamentals",
           title: 'Data Science Fundamentals',
           description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
